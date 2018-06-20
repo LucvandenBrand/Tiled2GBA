@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.9)
-project(GBA-Tiled)
+project(Tiled2GBA)
 
 # Source location.
 file(GLOB_RECURSE SOURCES src/*.c src/*.cpp src/*.h src/*.hpp src/*.inl)
