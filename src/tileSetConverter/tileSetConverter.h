@@ -16,7 +16,8 @@ public:
 private:
     void parseSheet(const vector<unsigned char> &sheet, unsigned sheetWidth, unsigned sheetHeight,
                     unsigned tileWidth, unsigned tileHeight);
-    uint16_t addColor(unsigned char red, unsigned char green, unsigned char blue);
+    uint8_t addColor(unsigned char red, unsigned char green, unsigned char blue);
+    unsigned char remap(unsigned char byte, unsigned char max, unsigned char newMax);
 
     const uint16_t GBA_TILE_SIZE = 8;
     unsigned int PALETTE_COLORS = 256;

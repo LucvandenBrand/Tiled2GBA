@@ -37,16 +37,16 @@ int main(int argc, char **argv)
     }
 
     auto tileSet = tileSets[0];
-    auto *codeWriter = new CodeWriter("map");
+    auto *codeWriter = new CodeWriter("custom");
     auto tileSetConverter = new TileSetConverter(tileSet);
 
     cout << "- Converting tiles..." << endl;
     auto tileSetBytes = tileSetConverter->getTiles();
-    codeWriter->makeArray("tileSet", tileSetBytes);
+    codeWriter->makeArray("TileSet", tileSetBytes);
 
     cout << "- Converting palette..." << endl;
     auto paletteBytes = tileSetConverter->getPalette();
-    codeWriter->makeArray("palette", paletteBytes);
+    codeWriter->makeArray("Palette", paletteBytes);
 
     cout << "Converting layers:" << endl;
     const auto& layers = map.getLayers();
@@ -64,7 +64,7 @@ int main(int argc, char **argv)
         cout << "- Converting Tile Layer: '" << layer->getName() << "'..." << endl;
         const auto tileLayer = dynamic_cast<const tmx::TileLayer*>(layer.get());
         auto tileLayerBytes = tileLayerConverter->convert(tileLayer);
-        codeWriter->makeArray("map", tileLayerBytes);
+        codeWriter->makeArray("Map", tileLayerBytes);
     }
 
     cout << endl << "Results:" << endl;

@@ -8,9 +8,9 @@ CodeWriter::CodeWriter(const string &name) {
 
 void CodeWriter::makeArray(string name, vector<uint16_t> bytes) {
     const unsigned long numBytes = bytes.size();
-    string definition = "uint16_t " + name + "[" + to_string(numBytes) +"]";
-    d_header << "uint16_t " << name << "Length=" << to_string(numBytes) << ";" << endl;
-    d_header << definition << ";" << endl << endl;
+    string definition = "const unsigned short " + d_name + name + "[" + to_string(numBytes) +"]";
+    d_header << "#define " << d_name << name << "Length " << to_string(numBytes) << endl;
+    d_header << "extern " << definition << ";" << endl << endl;
     d_code   << definition << " = {";
 
     for (int i = 0; i < numBytes; i++) {
