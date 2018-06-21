@@ -3,7 +3,7 @@
 #include "main.h"
 #include "lib/tmxlite/TileLayer.hpp"
 #include "tileLayerConverter/tileLayerConverter.h"
-#include "codeWriter/codeWriter.h"
+#include "gbaMap/gbaMap.h"
 #include "tileSetConverter/tileSetConverter.h"
 
 int main(int argc, char **argv)
@@ -37,16 +37,16 @@ int main(int argc, char **argv)
     }
 
     auto tileSet = tileSets[0];
-    auto *codeWriter = new CodeWriter("custom");
+    auto *gbaMap = new GBAMap("custom");
     auto tileSetConverter = new TileSetConverter(tileSet);
 
     cout << "- Converting tiles..." << endl;
     auto tileSetBytes = tileSetConverter->getTiles();
-    codeWriter->makeArray("TileSet", tileSetBytes);
+    gbaMap->setTileSet(tileSetBytes);
 
     cout << "- Converting palette..." << endl;
     auto paletteBytes = tileSetConverter->getPalette();
-    codeWriter->makeArray("Palette", paletteBytes);
+    gbaMap->setPalette(paletteBytes);
 
     cout << "Converting layers:" << endl;
     const auto& layers = map.getLayers();
@@ -64,12 +64,12 @@ int main(int argc, char **argv)
         cout << "- Converting Tile Layer: '" << layer->getName() << "'..." << endl;
         const auto tileLayer = dynamic_cast<const tmx::TileLayer*>(layer.get());
         auto tileLayerBytes = tileLayerConverter->convert(tileLayer);
-        codeWriter->makeArray("Map", tileLayerBytes);
+        gbaMap->addTileLayer(tileLayerBytes);
     }
 
     cout << endl << "Results:" << endl;
-    cout << "---------------------" << endl;
-    cout << *codeWriter;
+    gbaMap->toCode(cout, cout);
 
+    cout << "Done!" << endl;
     return EXIT_SUCCESS;
 }
