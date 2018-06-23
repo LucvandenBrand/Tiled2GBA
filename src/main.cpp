@@ -12,6 +12,18 @@ void printHeader() {
          << RESET << " by " << GREEN << AUTHOR << RESET << endl;
 }
 
+string pathToName(string path) {
+    const size_t last_slash_idx = path.find_last_of("\\/");
+    if (std::string::npos != last_slash_idx)
+        path.erase(0, last_slash_idx + 1);
+
+    const size_t period_idx = path.rfind('.');
+    if (std::string::npos != period_idx)
+        path.erase(period_idx);
+
+    return path;
+}
+
 int main(int argc, char **argv)
 {
     auto logger = Logger::getInstance();
@@ -47,9 +59,8 @@ int main(int argc, char **argv)
             logger->setLogLevel(ERROR);
         }
 
-        if (result.count("files")) {
+        if (result.count("files"))
             filePaths = result["files"].as<vector<string>>();
-        }
 
     } catch (const cxxopts::OptionException& e) {
         log(ERROR, e.what());
@@ -63,14 +74,14 @@ int main(int argc, char **argv)
 
     string mapPath = filePaths[0];
     tmx::Map tmxMap;
-    if (!tmxMap.load(mapPath)) {
+    if (!tmxMap.load(mapPath))
         return EXIT_FAILURE;
-    };
 
     log(INFO, "Loaded '" + mapPath + "'.");
 
+    string mapName = pathToName(mapPath);
     MapConverter mapConverter;
-    GBAMap gbaMap = mapConverter.convert(tmxMap);
+    GBAMap gbaMap = mapConverter.convert(mapName, tmxMap);
 
     log(INFO, "Generating code.");
 

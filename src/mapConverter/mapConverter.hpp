@@ -16,7 +16,7 @@ public:
      * @param tmxMap The TMX Map.
      * @return The GBA Map.
      */
-    GBAMap convert(const tmx::Map &tmxMap);
+    GBAMap convert(const string &name, const tmx::Map &tmxMap);
 
 private:
     const int GBA_LAYERS = 3;

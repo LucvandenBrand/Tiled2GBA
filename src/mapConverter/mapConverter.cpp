@@ -4,9 +4,9 @@
 #include "../log/logger.hpp"
 #include <iostream>
 
-GBAMap MapConverter::convert(const tmx::Map &tmxMap) {
+GBAMap MapConverter::convert(const string &name, const tmx::Map &tmxMap) {
     auto log = *Logger::getInstance();
-    GBAMap gbaMap("custom");
+    GBAMap gbaMap(name);
 
     auto tileSize = tmxMap.getTileSize();
     if (tileSize.x != GBA_TILE_SIZE || tileSize.y != GBA_TILE_SIZE) {
@@ -42,8 +42,7 @@ GBAMap MapConverter::convert(const tmx::Map &tmxMap) {
     }
 
     auto *tileLayerConverter = new TileLayerConverter(tileSet.getFirstGID());
-    for (const auto& layer : layers)
-    {
+    for (const auto& layer : layers) {
         if (layer->getType() != tmx::Layer::Type::Tile)
             continue;
 
