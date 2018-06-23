@@ -1,6 +1,6 @@
 #include <iostream>
-#include "tileSetConverter.h"
-#include "../lib/lodepng/lodepng.h"
+#include "tileSetConverter.hpp"
+#include "../../lib/lodepng/lodepng.h"
 #include <algorithm>
 
 TileSetConverter::TileSetConverter(const tmx::Tileset &tileSet) {

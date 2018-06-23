@@ -2,7 +2,7 @@
 #define TILE_LAYER_CONVERTER_H
 
 #include <vector>
-#include "../lib/tmxlite/TileLayer.hpp"
+#include "../../lib/tmxlite/TileLayer.hpp"
 
 using namespace std;
 

@@ -1,4 +1,4 @@
-#include "tileLayerConverter.h"
+#include "tileLayerConverter.hpp"
 
 TileLayerConverter::TileLayerConverter(int firstGID) : d_firstGID(firstGID) {
 

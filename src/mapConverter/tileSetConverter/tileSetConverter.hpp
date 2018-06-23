@@ -2,7 +2,7 @@
 #define TILE_SET_CONVERTER_H
 
 #include <vector>
-#include "../lib/tmxlite/Tileset.hpp"
+#include "../../lib/tmxlite/Tileset.hpp"
 
 using namespace std;
 
