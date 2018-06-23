@@ -6,13 +6,14 @@
 
 GBAMap MapConverter::convert(const tmx::Map &tmxMap) {
     auto log = *Logger::getInstance();
+    GBAMap gbaMap("custom");
 
     auto tileSize = tmxMap.getTileSize();
-    if (tileSize.x != TILE_SIZE || tileSize.y != TILE_SIZE) {
-        log(ERROR, "The tile size of "
+    if (tileSize.x != GBA_TILE_SIZE || tileSize.y != GBA_TILE_SIZE) {
+        log(ERROR, "The map tile size of "
                            + to_string(tileSize.x) + 'x' + to_string(tileSize.y)
                            + " is not compatible with the GBA."
-                           + "The GBA expects 8x8 tiles.");
+                           + " The GBA expects 8x8 tiles.");
         exit(EXIT_FAILURE);
     }
 
@@ -24,9 +25,7 @@ GBAMap MapConverter::convert(const tmx::Map &tmxMap) {
     }
 
     auto tileSet = tileSets[0];
-    GBAMap gbaMap("custom");
     auto tileSetConverter = new TileSetConverter(tileSet);
-
     log(INFO, "Converting tiles.");
     auto tileSetBytes = tileSetConverter->getTiles();
     gbaMap.setTileSet(tileSetBytes);
@@ -39,7 +38,7 @@ GBAMap MapConverter::convert(const tmx::Map &tmxMap) {
     if (layers.size() > GBA_LAYERS) {
         log(WARN, "This map has " + to_string(layers.size())
                   + ", which is " + to_string(GBA_LAYERS - layers.size())
-                  + " more than than the GBA has natively!");
+                  + " more than than the GBA has natively.");
     }
 
     auto *tileLayerConverter = new TileLayerConverter(tileSet.getFirstGID());

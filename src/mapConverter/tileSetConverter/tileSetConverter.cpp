@@ -11,7 +11,17 @@ TileSetConverter::TileSetConverter(const tmx::Tileset &tileSet) {
 
     auto log = *Logger::getInstance();
     if (error) {
-        log(ERROR, "Image decoding error " + to_string(error) + ": " + lodepng_error_text(error));
+        log(ERROR, "Tile set image decoding error " + to_string(error) + ": " + lodepng_error_text(error));
+        exit(EXIT_FAILURE);
+    }
+
+    if (width != GBA_TILE_SIZE) {
+        log(ERROR, "The tile set image must be 8 pixels wide.");
+        exit(EXIT_FAILURE);
+    }
+
+    if (height % GBA_TILE_SIZE != 0) {
+        log(ERROR, "The tile set image must have a height that is a multiple of 8.");
         exit(EXIT_FAILURE);
     }
 
