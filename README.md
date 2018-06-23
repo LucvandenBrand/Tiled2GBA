@@ -4,7 +4,7 @@ Simple CLI for converting [Tiled](https://www.mapeditor.org) maps to data the **
 Special thanks to [Jasper Vijn](https://www.coranac.com) for providing a great tutorial on GBA development!
 
 ## Releases
-You can download binary releases for Linux [here]().
+You can download binary releases for Linux [here](https://github.com/LucvandenBrand/Tiled2GBA/releases).
 
 ## Usage
 Simply call `Tiled2GBA` from your command prompt, and provide a `map.tmx` and `map.c map.h` as
