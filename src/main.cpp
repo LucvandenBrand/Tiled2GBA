@@ -31,6 +31,7 @@ int main(int argc, char **argv)
     auto result = options.parse(argc, argv);
 
     if (result.count("help")) {
+        printHeader();
         cout << options.help() << endl;
         return EXIT_SUCCESS;
     }
