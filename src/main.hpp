@@ -1,10 +1,11 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-const int NUM_ARGS = 2;
-const int GBA_LAYERS = 3;
-const int TILE_SIZE = 8;
-const int NUM_TILE_SETS = 1;
+const char *PROGRAM_NAME = "Tiled2GBA";
+const char *AUTHOR = "Luc van den Brand";
+const int VERSION_MAJOR = 0;
+const int VERSION_MINOR = 1;
+const int VERSION_PATCH = 0;
 
 using namespace std;
 

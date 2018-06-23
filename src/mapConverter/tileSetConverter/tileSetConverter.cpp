@@ -1,6 +1,7 @@
 #include <iostream>
 #include "tileSetConverter.hpp"
 #include "../../lib/lodepng/lodepng.h"
+#include "../../log/logger.hpp"
 #include <algorithm>
 
 TileSetConverter::TileSetConverter(const tmx::Tileset &tileSet) {
@@ -8,8 +9,9 @@ TileSetConverter::TileSetConverter(const tmx::Tileset &tileSet) {
     unsigned width, height;
     unsigned error = lodepng::decode(image, width, height, tileSet.getImagePath());
 
+    auto log = *Logger::getInstance();
     if (error) {
-        cout << "[ERR] Image decoding error " << error << ": " << lodepng_error_text(error) << endl;
+        log(ERROR, "Image decoding error " + to_string(error) + ": " + lodepng_error_text(error));
         exit(EXIT_FAILURE);
     }
 
