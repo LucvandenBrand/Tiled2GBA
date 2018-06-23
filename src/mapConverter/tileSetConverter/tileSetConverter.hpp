@@ -6,11 +6,27 @@
 
 using namespace std;
 
+/**
+ * Converts Tile Sets to a GBA 256 color palette and GBA Char block.
+ */
 class TileSetConverter {
 public:
+    /**
+     * Construct the converter.
+     * @param tileSet The Tile Set to convert.
+     */
     explicit TileSetConverter(const tmx::Tileset &tileSet);
 
+    /**
+     * Return the GBA Char block.
+     * @return The GBA Char block.
+     */
     vector<uint16_t> getTiles();
+
+    /**
+     * Return the GBA 256 color palette.
+     * @return The 256 color palette.
+     */
     vector<uint16_t> getPalette();
 
 private:
