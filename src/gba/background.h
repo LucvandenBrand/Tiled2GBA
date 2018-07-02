@@ -1,0 +1,10 @@
+#ifndef GBA_BACKGROUND_H
+#define GBA_BACKGROUND_H
+
+#define GBA_LAYERS    3
+#define GBA_TILE_SIZE 8
+#define NUM_TILE_SETS 1
+
+#define PALETTE_COLORS 256
+
+#endif // GBA_BACKGROUND_H

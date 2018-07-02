@@ -35,9 +35,6 @@ private:
     uint8_t addColor(Color color);
     void parseSheet(Image image, unsigned tileWidth, unsigned tileHeight);
 
-    const uint16_t GBA_TILE_SIZE = 8;
-    unsigned int PALETTE_COLORS = 256;
-
     vector<uint16_t> d_tileBytes;
     vector<uint16_t> d_paletteBytes;
 };

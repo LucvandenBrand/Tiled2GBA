@@ -4,6 +4,7 @@
 #include "../../log/logger.hpp"
 #include "image/image.hpp"
 #include "imageRetiler/imageRetiler.hpp"
+#include "../../gba/background.h"
 #include <algorithm>
 
 TileSetConverter::TileSetConverter(const tmx::Tileset &tileSet) {

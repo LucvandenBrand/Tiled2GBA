@@ -2,6 +2,7 @@
 #include "tileSetConverter/tileSetConverter.hpp"
 #include "tileLayerConverter/tileLayerConverter.hpp"
 #include "../log/logger.hpp"
+#include "../gba/background.h"
 #include <iostream>
 
 GBAMap MapConverter::convert(const string &name, const tmx::Map &tmxMap) {
@@ -48,7 +49,7 @@ GBAMap MapConverter::convert(const string &name, const tmx::Map &tmxMap) {
 
         log(INFO, "Converting layer '" + layer->getName() + "'.");
         const auto tileLayer = dynamic_cast<const tmx::TileLayer*>(layer.get());
-        auto tileLayerBytes = tileLayerConverter->convert(tileLayer);
+        auto tileLayerBytes = tileLayerConverter->convert(tileLayer, tileSize.x, tileSize.y);
         gbaMap.addTileLayer(tileLayerBytes);
     }
 

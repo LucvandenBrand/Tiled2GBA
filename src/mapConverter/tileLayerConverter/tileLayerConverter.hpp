@@ -22,12 +22,14 @@ public:
      * @param tileLayer The Tile Layer.
      * @return A vector of bytes representing 16 bit screen block entries.
      */
-    vector<uint16_t> convert(const tmx::TileLayer *tileLayer);
+    vector<uint16_t> convert(const tmx::TileLayer *tileLayer, unsigned tileWidth, unsigned tileHeight);
 private:
     const uint16_t SE_FLIP_H = 0x000A;
     const uint16_t SE_FLIP_V = 0x000B;
 
     int d_firstGID;
+
+    uint16_t convert(unsigned gridID, bool flipH, bool flipV);
 };
 
 #endif // TILE_LAYER_CONVERTER_H
