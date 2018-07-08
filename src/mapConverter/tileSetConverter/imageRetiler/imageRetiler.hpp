@@ -5,8 +5,8 @@
 
 class ImageRetiler {
 public:
-    Image getTile(Image image, unsigned imageX, unsigned imageY, unsigned tileWidth, unsigned tileHeight);
-    Image retile(Image image, unsigned tileWidth, unsigned tileHeight);
+    Image getTile(Image image, unsigned imageX, unsigned imageY, unsigned tileSize);
+    Image retile(Image image, unsigned tileSize);
 };
 
 #endif // IMAGE_RETILER_H

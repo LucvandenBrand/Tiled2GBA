@@ -5,8 +5,12 @@ TileLayerConverter::TileLayerConverter(int firstGID) : d_firstGID(firstGID) {
 
 }
 
+unsigned TileLayerConverter::coordToIndex(unsigned row, unsigned col, unsigned width) {
+    return row * width + col;
+}
+
 uint16_t TileLayerConverter::convert(unsigned gridID, bool flipH, bool flipV) {
-    auto screenEntry = (uint16_t) (gridID - d_firstGID);
+    auto screenEntry = (uint16_t) gridID;
     if (flipH)
         screenEntry |= SE_FLIP_H;
     if (flipV)
@@ -14,22 +18,28 @@ uint16_t TileLayerConverter::convert(unsigned gridID, bool flipH, bool flipV) {
     return screenEntry;
 }
 
-vector<uint16_t> TileLayerConverter::convert(const tmx::TileLayer *tileLayer, unsigned tileWidth, unsigned tileHeight) {
-    unsigned subTilesW = tileWidth / GBA_TILE_SIZE;
-    unsigned subTilesH = tileHeight / GBA_TILE_SIZE;
-    unsigned numSubTiles = subTilesW * subTilesH;
-
-    vector<uint16_t> bytes;
+vector<uint16_t> TileLayerConverter::convert(const tmx::TileLayer *tileLayer, unsigned width, unsigned height, unsigned tileSize) {
+    unsigned subTiles = tileSize / GBA_TILE_SIZE;
+    unsigned screenWidth = width * subTiles;
+    unsigned screenHeight = height * subTiles;
+    vector<uint16_t> bytes(screenWidth * screenHeight, 0);
     const auto& tiles = tileLayer->getTiles();
-    bytes.reserve(tiles.size() * numSubTiles);
 
-    for (auto tile : tiles) {
-        bool flipH = tile.flipFlags == tmx::TileLayer::FlipFlag::Horizontal;
-        bool flipV = tile.flipFlags == tmx::TileLayer::FlipFlag::Vertical;
+    for (unsigned row = 0; row < height; row++) {
+        for (unsigned col = 0; col < width; col++) {
+            auto tile = tiles[coordToIndex(row, col, width)];
+            bool flipH = tile.flipFlags == tmx::TileLayer::FlipFlag::Horizontal;
+            bool flipV = tile.flipFlags == tmx::TileLayer::FlipFlag::Vertical;
+            unsigned baseID = (tile.ID - d_firstGID) * subTiles * subTiles;
 
-        for (unsigned subID = 0; subID < numSubTiles; subID++) {
-            auto screenEntry = convert(tile.ID * numSubTiles + subID, flipH, flipV);
-            bytes.push_back(screenEntry);
+            for (unsigned subRow = 0; subRow < subTiles; subRow++) {
+                for (unsigned subCol = 0; subCol < subTiles; subCol++) {
+                    uint16_t screenEntry = convert(baseID + subRow * subTiles + subCol, flipH, flipV);
+                    unsigned screenRow = row * subTiles + subRow;
+                    unsigned screenCol = col * subTiles + subCol;
+                    bytes[coordToIndex(screenRow, screenCol, screenWidth)] = screenEntry;
+                }
+            }
         }
     }
 

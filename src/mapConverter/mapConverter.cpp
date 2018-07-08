@@ -10,13 +10,19 @@ GBAMap MapConverter::convert(const string &name, const tmx::Map &tmxMap) {
     GBAMap gbaMap(name);
 
     auto tileSize = tmxMap.getTileSize();
-    if (tileSize.x != GBA_TILE_SIZE || tileSize.y != GBA_TILE_SIZE) {
-        log(ERROR, "The map tile size of "
-                           + to_string(tileSize.x) + 'x' + to_string(tileSize.y)
-                           + " is not compatible with the GBA."
-                           + " The GBA expects 8x8 tiles.");
+    if (tileSize.x != tileSize.y) {
+        log(ERROR, "Only square map tiles are supported.");
         exit(EXIT_FAILURE);
     }
+
+    if (tileSize.x % GBA_TILE_SIZE != 0) {
+        log(ERROR, "The tile size must be a multiple of " + to_string(GBA_TILE_SIZE) + '.');
+        exit(EXIT_FAILURE);
+    }
+
+    auto mapSize = tmxMap.getTileCount();
+    unsigned gbaWidth = mapSize.x * tileSize.x / GBA_TILE_SIZE;
+    unsigned gbaHeight = mapSize.y * tileSize.y / GBA_TILE_SIZE;
 
     auto tileSets= tmxMap.getTilesets();
     if (tileSets.size() != NUM_TILE_SETS) {
@@ -26,6 +32,11 @@ GBAMap MapConverter::convert(const string &name, const tmx::Map &tmxMap) {
     }
 
     auto tileSet = tileSets[0];
+    if (tileSet.getTileSize().x != tileSize.x || tileSet.getTileSize().y != tileSize.y) {
+        log(ERROR, "The tileSet must have the same size as the map tiles.");
+        exit(EXIT_FAILURE);
+    }
+
     auto tileSetConverter = new TileSetConverter(tileSet);
     log(INFO, "Converting tiles.");
     auto tileSetBytes = tileSetConverter->getTiles();
@@ -49,7 +60,7 @@ GBAMap MapConverter::convert(const string &name, const tmx::Map &tmxMap) {
 
         log(INFO, "Converting layer '" + layer->getName() + "'.");
         const auto tileLayer = dynamic_cast<const tmx::TileLayer*>(layer.get());
-        auto tileLayerBytes = tileLayerConverter->convert(tileLayer, tileSize.x, tileSize.y);
+        auto tileLayerBytes = tileLayerConverter->convert(tileLayer, mapSize.x, mapSize.y, tileSize.x);
         gbaMap.addTileLayer(tileLayerBytes);
     }
 

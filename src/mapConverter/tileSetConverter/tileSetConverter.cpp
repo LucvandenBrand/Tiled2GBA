@@ -12,7 +12,7 @@ TileSetConverter::TileSetConverter(const tmx::Tileset &tileSet) {
     try {
         Image image(tileSet.getImagePath());
         auto tileSize = tileSet.getTileSize();
-        parseSheet(image, tileSize.x, tileSize.y);
+        parseSheet(image, tileSize.x);
     } catch (runtime_error &error) {
         log(ERROR, error.what());
         exit(EXIT_FAILURE);
@@ -48,11 +48,14 @@ uint8_t TileSetConverter::addColor(Color color) {
     return (uint8_t) (d_paletteBytes.size() - 1);
 }
 
-void TileSetConverter::parseSheet(Image image, unsigned tileWidth, unsigned tileHeight) {
+void TileSetConverter::parseSheet(Image image, unsigned tileSize) {
     addColor(BLACK);
 
     ImageRetiler retiler;
-    Image retiledImage = retiler.retile(image, tileWidth, tileHeight);
+    Image retiledImage = retiler.retile(image, tileSize);
+
+    if (tileSize != GBA_TILE_SIZE)
+        retiledImage = retiler.retile(retiledImage, GBA_TILE_SIZE);
 
     d_tileBytes.reserve(retiledImage.getWidth() * retiledImage.getHeight() / 2);
     for (unsigned row = 0; row < retiledImage.getHeight(); row++) {
@@ -63,7 +66,7 @@ void TileSetConverter::parseSheet(Image image, unsigned tileWidth, unsigned tile
             Color secondColor   = retiledImage.getPixel(row, col + 1);
             uint8_t secondPixel =  addColor(secondColor);
 
-            uint16_t pixel = secondPixel | (firstPixel << 8);
+            uint16_t pixel = firstPixel | (secondPixel << 8);
             d_tileBytes.push_back(pixel);
         }
     }

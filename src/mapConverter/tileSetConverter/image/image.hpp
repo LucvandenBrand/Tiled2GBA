@@ -16,8 +16,11 @@ const Color BLACK = {0, 0, 0, 1};
 class Image {
 public:
     Image();
+    Image(const Image& otherImage);
     explicit Image(string path);
     Image(vector<Color> &pixels, unsigned width, unsigned height);
+
+    Image& operator= (const Image & otherImage);
 
     void resize(unsigned width, unsigned height);
     void appendToBottom(Image image);

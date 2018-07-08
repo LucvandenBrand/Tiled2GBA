@@ -5,6 +5,18 @@
 Image::Image() : d_width(0), d_height(0) {
 }
 
+Image::Image(const Image& otherImage) {
+    d_width = otherImage.d_width;
+    d_height = otherImage.d_height;
+    d_pixels = otherImage.d_pixels;
+}
+
+Image& Image::operator= (const Image & otherImage) {
+    d_width = otherImage.d_width;
+    d_height = otherImage.d_height;
+    d_pixels = otherImage.d_pixels;
+}
+
 Image::Image(string path) {
     vector<unsigned char> imageData;
     unsigned error = lodepng::decode(imageData, d_width, d_height, path);

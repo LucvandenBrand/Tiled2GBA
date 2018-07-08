@@ -33,7 +33,7 @@ public:
 private:
     unsigned char remap(unsigned char byte, unsigned char max, unsigned char newMax);
     uint8_t addColor(Color color);
-    void parseSheet(Image image, unsigned tileWidth, unsigned tileHeight);
+    void parseSheet(Image image, unsigned tileSize);
 
     vector<uint16_t> d_tileBytes;
     vector<uint16_t> d_paletteBytes;
