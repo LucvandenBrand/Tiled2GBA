@@ -9,7 +9,7 @@ You can download binary releases for Linux [here](https://github.com/LucvandenBr
 ## Usage
 Simply call `Tiled2GBA` from your command prompt, and provide a `map.tmx` and `map.c map.h` as
 input and output parameters respectively. 
-For example, `Tiled2GBA assets/map.tmx src/map.c map.h` would output compilable C code
+For example, `Tiled2GBA assets/map.tmx src/map.c src/map.h` would output compilable C code
 into the `src` folder.
 
 You can use the `--help` command for more information.
