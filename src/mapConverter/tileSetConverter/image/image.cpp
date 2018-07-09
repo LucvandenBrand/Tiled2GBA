@@ -2,8 +2,7 @@
 #include "../../../lib/lodepng/lodepng.h"
 #include <stdexcept>
 
-Image::Image() : d_width(0), d_height(0) {
-}
+Image::Image() : d_width(0), d_height(0) {}
 
 Image::Image(const Image& otherImage) {
     d_width = otherImage.d_width;

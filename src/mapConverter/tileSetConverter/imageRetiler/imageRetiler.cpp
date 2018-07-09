@@ -23,6 +23,5 @@ Image ImageRetiler::retile(Image image, unsigned tileSize) {
         }
     }
 
-
     return newSheet;
 }
