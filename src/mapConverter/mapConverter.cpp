@@ -7,7 +7,11 @@
 
 GBAMap MapConverter::convert(const string &name, const tmx::Map &tmxMap) {
     auto log = *Logger::getInstance();
-    GBAMap gbaMap(name);
+
+    if (tmxMap.getOrientation() != tmx::Orientation::Orthogonal) {
+        log(ERROR, "Only orthogonal maps are supported.");
+        exit(EXIT_FAILURE);
+    }
 
     auto tileSize = tmxMap.getTileSize();
     if (tileSize.x != tileSize.y) {
@@ -36,6 +40,8 @@ GBAMap MapConverter::convert(const string &name, const tmx::Map &tmxMap) {
         log(ERROR, "The tileSet must have the same size as the map tiles.");
         exit(EXIT_FAILURE);
     }
+
+    GBAMap gbaMap(name);
 
     auto tileSetConverter = new TileSetConverter(tileSet);
     log(INFO, "Converting tiles.");
