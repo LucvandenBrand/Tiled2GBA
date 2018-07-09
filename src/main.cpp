@@ -2,7 +2,7 @@
 #include <fstream>
 #include "lib/tmxlite/Map.hpp"
 #include "main.hpp"
-#include "gbaMap/gbaMap.hpp"
+#include "gba/gbaMap/gbaMap.hpp"
 #include "lib/cxxopts/cxxopts.hpp"
 #include "mapConverter/mapConverter.hpp"
 #include "log/logger.hpp"
