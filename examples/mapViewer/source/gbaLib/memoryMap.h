@@ -4,7 +4,7 @@
 #include "types.h"
 
 /**
- *  Defines the memory locations.
+ *  Defines the general memory locations.
  */
 
 #define MEMORY_IO       0x04000000

@@ -9,7 +9,7 @@
 void loadMap();
 
 /**
- * Shift the map to (dX, dY).
+ * Shift the map to (offset.x, offset.y).
  **/
 void shiftMap(BGPoint offset);
 
