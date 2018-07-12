@@ -1,5 +1,6 @@
 #include "../gbaLib/types.h"
 #include "mapViewer.h"
+#include "../gbaLib/input/input.h"
 
 int main()
 {
@@ -9,7 +10,11 @@ int main()
     while (TRUE)
     {
         videoSync();
-        shift.y += 1;
+
+        KeyState inputState = getInputState();
+        shift.y += getYAxis(inputState);
+        shift.x += getXAxis(inputState);
+
         shiftMap(shift);
     }
 
