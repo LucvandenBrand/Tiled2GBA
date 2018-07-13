@@ -11,6 +11,6 @@ void loadMap()
     REGISTER_BACKGROUND_CONTROL[0] = FLAG_BACKGROUND_CHAR_BLOCK(0)    |
                                      FLAG_BACKGROUND_SCREEN_BLOCK(30) |
                                      FLAG_BACKGROUND_8BPP             |
-                                     FLAG_BACKGROUND_REGULAR_32x64;
+                                     FLAG_BACKGROUND_REGULAR_64x32;
     REGISTER_DISPLAY_CONTROL = FLAG_MODE0 | FLAG_BACKGROUND0;
 }
