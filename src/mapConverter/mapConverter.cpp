@@ -2,20 +2,40 @@
 #include "tileSetConverter/tileSetConverter.hpp"
 #include "tileLayerConverter/tileLayerConverter.hpp"
 #include "../log/logger.hpp"
+#include "../gba/background.h"
 #include <iostream>
 
 GBAMap MapConverter::convert(const string &name, const tmx::Map &tmxMap) {
     auto log = *Logger::getInstance();
-    GBAMap gbaMap(name);
 
-    auto tileSize = tmxMap.getTileSize();
-    if (tileSize.x != GBA_TILE_SIZE || tileSize.y != GBA_TILE_SIZE) {
-        log(ERROR, "The map tile size of "
-                           + to_string(tileSize.x) + 'x' + to_string(tileSize.y)
-                           + " is not compatible with the GBA."
-                           + " The GBA expects 8x8 tiles.");
+    if (tmxMap.getOrientation() != tmx::Orientation::Orthogonal) {
+        log(ERROR, "Only orthogonal maps are supported.");
         exit(EXIT_FAILURE);
     }
+
+    auto tileSize = tmxMap.getTileSize();
+    if (tileSize.x != tileSize.y) {
+        log(ERROR, "Only square map tiles are supported.");
+        exit(EXIT_FAILURE);
+    }
+
+    if (tileSize.x % GBA_TILE_SIZE != 0) {
+        log(ERROR, "The tile size must be a multiple of " + to_string(GBA_TILE_SIZE) + '.');
+        exit(EXIT_FAILURE);
+    }
+
+    auto mapSize = tmxMap.getTileCount();
+    unsigned gbaWidth = mapSize.x * tileSize.x / GBA_TILE_SIZE;
+    unsigned gbaHeight = mapSize.y * tileSize.y / GBA_TILE_SIZE;
+
+    if (gbaWidth  != GBA_MAP_SIZE && gbaWidth  != GBA_MAP_SIZE * 2 ||
+        gbaHeight != GBA_MAP_SIZE && gbaHeight != GBA_MAP_SIZE * 2) {
+        log(ERROR, "The map width and height must be either " + to_string(GBA_MAP_SIZE) +
+                   " or " + to_string(GBA_MAP_SIZE * 2) +
+                   " tiles large (when subdivided to GBA-sized tiles of "
+                   + to_string(GBA_TILE_SIZE) + " pixels large).");
+        exit(EXIT_FAILURE);
+    };
 
     auto tileSets= tmxMap.getTilesets();
     if (tileSets.size() != NUM_TILE_SETS) {
@@ -25,6 +45,16 @@ GBAMap MapConverter::convert(const string &name, const tmx::Map &tmxMap) {
     }
 
     auto tileSet = tileSets[0];
+    if (tileSet.getTileSize().x != tileSize.x || tileSet.getTileSize().y != tileSize.y) {
+        log(ERROR, "The tileSet must have the same size as the map tiles.");
+        exit(EXIT_FAILURE);
+    }
+
+    GBAMap gbaMap(name);
+
+    log(INFO, "Converting size values.");
+    gbaMap.setSize(gbaWidth, gbaHeight);
+
     auto tileSetConverter = new TileSetConverter(tileSet);
     log(INFO, "Converting tiles.");
     auto tileSetBytes = tileSetConverter->getTiles();
@@ -48,7 +78,7 @@ GBAMap MapConverter::convert(const string &name, const tmx::Map &tmxMap) {
 
         log(INFO, "Converting layer '" + layer->getName() + "'.");
         const auto tileLayer = dynamic_cast<const tmx::TileLayer*>(layer.get());
-        auto tileLayerBytes = tileLayerConverter->convert(tileLayer);
+        auto tileLayerBytes = tileLayerConverter->convert(tileLayer, mapSize.x, mapSize.y, tileSize.x);
         gbaMap.addTileLayer(tileLayerBytes);
     }
 
