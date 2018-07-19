@@ -32,6 +32,14 @@ public:
     void setTileSet(vector<uint16_t> &bytes);
 
     /**
+     * Set the size of the map. Assumes the width and height are valid.
+     * The width and height are converted to a flag for the GBA hardware to work with.
+     * @param mapWidth The width of the map.
+     * @param mapHeight The height of the map.
+     */
+    void setSize(unsigned mapWidth, unsigned mapHeight);
+
+    /**
      * Add a screen block to the map.
      * @param bytes The Screen block data.
      */
@@ -45,12 +53,14 @@ public:
     void toCode(ostream &headerFile, ostream &codeFile);
 
 private:
+    void makeFlagDefinition(ostream &headerStream, const string &name, uint16_t flag);
+
     void makeArrayDeclaration(ostream &headerStream, const string &name, vector<uint16_t> &bytes);
     void makeArrayDefinition(ostream &codeStream, const string &name, vector<uint16_t> &bytes);
 
-private:
     const int LINE_LENGTH = 15;
 
+    uint16_t d_sizeFlag;
     vector<uint16_t> d_palette, d_tileSet;
     vector<vector<uint16_t>> d_tileLayers;
 

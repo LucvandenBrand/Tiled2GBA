@@ -1,4 +1,5 @@
 #include "gbaMap.hpp"
+#include "../background.h"
 #include <sstream>
 #include <iomanip>
 
@@ -18,7 +19,15 @@ void GBAMap::addTileLayer(vector<uint16_t> &bytes) {
     d_tileLayers.push_back(bytes);
 }
 
+void GBAMap::setSize(unsigned mapWidth, unsigned mapHeight) {
+    auto widthFlag  = (uint16_t) (mapWidth  == GBA_MAP_SIZE ? 0 : 1);
+    auto heightFlag = (uint16_t) (mapHeight == GBA_MAP_SIZE ? 0 : 1);
+
+    d_sizeFlag = widthFlag | (heightFlag << 1);
+}
+
 void GBAMap::toCode(ostream &headerFile, ostream &codeFile) {
+    makeFlagDefinition(headerFile, d_name + "SizeFlag", d_sizeFlag);
     makeArrayDeclaration(headerFile, d_name + "Palette", d_palette);
     makeArrayDefinition(codeFile, d_name + "Palette", d_palette);
 
@@ -30,6 +39,10 @@ void GBAMap::toCode(ostream &headerFile, ostream &codeFile) {
         makeArrayDeclaration(headerFile, d_name + "TileMap" + to_string(index), tileLayer);
         makeArrayDefinition(codeFile, d_name + "TileMap" + to_string(index), tileLayer);
     }
+}
+
+void GBAMap::makeFlagDefinition(ostream &headerStream, const string &name, uint16_t flag) {
+    headerStream << "#define " << name << " 0x" << setfill('0') << setw(4) << hex << (int) flag << endl << endl;
 }
 
 void GBAMap::makeArrayDeclaration(ostream &headerStream, const string &name, vector<uint16_t> &bytes) {

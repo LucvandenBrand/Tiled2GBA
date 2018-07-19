@@ -28,6 +28,15 @@ GBAMap MapConverter::convert(const string &name, const tmx::Map &tmxMap) {
     unsigned gbaWidth = mapSize.x * tileSize.x / GBA_TILE_SIZE;
     unsigned gbaHeight = mapSize.y * tileSize.y / GBA_TILE_SIZE;
 
+    if (gbaWidth  != GBA_MAP_SIZE && gbaWidth  != GBA_MAP_SIZE * 2 ||
+        gbaHeight != GBA_MAP_SIZE && gbaHeight != GBA_MAP_SIZE * 2) {
+        log(ERROR, "The map width and height must be either " + to_string(GBA_MAP_SIZE) +
+                   " or " + to_string(GBA_MAP_SIZE * 2) +
+                   " tiles large (when subdivided to GBA-sized tiles of "
+                   + to_string(GBA_TILE_SIZE) + " pixels large).");
+        exit(EXIT_FAILURE);
+    };
+
     auto tileSets= tmxMap.getTilesets();
     if (tileSets.size() != NUM_TILE_SETS) {
         log(ERROR, "The GBA only supports a single tileSet per map, this map has "
@@ -42,6 +51,8 @@ GBAMap MapConverter::convert(const string &name, const tmx::Map &tmxMap) {
     }
 
     GBAMap gbaMap(name);
+
+    gbaMap.setSize(gbaWidth, gbaHeight);
 
     auto tileSetConverter = new TileSetConverter(tileSet);
     log(INFO, "Converting tiles.");
