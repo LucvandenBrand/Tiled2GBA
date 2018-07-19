@@ -23,7 +23,7 @@ void GBAMap::setSize(unsigned mapWidth, unsigned mapHeight) {
     auto widthFlag  = (uint16_t) (mapWidth  == GBA_MAP_SIZE ? 0 : 1);
     auto heightFlag = (uint16_t) (mapHeight == GBA_MAP_SIZE ? 0 : 1);
 
-    d_sizeFlag = widthFlag | (heightFlag << 1);
+    d_sizeFlag = (widthFlag | (heightFlag << 1)) << 14;
 }
 
 void GBAMap::toCode(ostream &headerFile, ostream &codeFile) {
