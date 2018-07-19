@@ -52,6 +52,7 @@ GBAMap MapConverter::convert(const string &name, const tmx::Map &tmxMap) {
 
     GBAMap gbaMap(name);
 
+    log(INFO, "Converting size values.");
     gbaMap.setSize(gbaWidth, gbaHeight);
 
     auto tileSetConverter = new TileSetConverter(tileSet);

@@ -58,6 +58,7 @@ private:
     void makeArrayDeclaration(ostream &headerStream, const string &name, vector<uint16_t> &bytes);
     void makeArrayDefinition(ostream &codeStream, const string &name, vector<uint16_t> &bytes);
 
+    const int SIZE_FLAG_OFFSET = 14;
     const int LINE_LENGTH = 15;
 
     uint16_t d_sizeFlag;
