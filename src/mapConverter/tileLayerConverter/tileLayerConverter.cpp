@@ -1,12 +1,21 @@
 #include "tileLayerConverter.hpp"
 #include "../../gba/background.h"
 
-TileLayerConverter::TileLayerConverter(int firstGID) : d_firstGID(firstGID) {
-
-}
+TileLayerConverter::TileLayerConverter(int firstGID) : d_firstGID(firstGID) {}
 
 unsigned TileLayerConverter::coordToIndex(unsigned row, unsigned col, unsigned width) {
     return row * width + col;
+}
+
+vector<tmx::TileLayer::Tile>
+TileLayerConverter::selectCrop(const vector<tmx::TileLayer::Tile> &tiles, unsigned cropRow, unsigned cropCol, unsigned mapWidth,
+                               unsigned size) {
+    vector<tmx::TileLayer::Tile> cropTiles(size * size);
+    for (unsigned row = 0; row < size; row++)
+        for (unsigned col = 0; col < size; col++)
+            cropTiles[coordToIndex(row, col, size)] = tiles[coordToIndex(cropRow + row, cropCol + col, mapWidth)];
+
+    return cropTiles;
 }
 
 uint16_t TileLayerConverter::convert(unsigned gridID, bool flipH, bool flipV) {
@@ -18,16 +27,13 @@ uint16_t TileLayerConverter::convert(unsigned gridID, bool flipH, bool flipV) {
     return screenEntry;
 }
 
-vector<uint16_t> TileLayerConverter::convert(const tmx::TileLayer *tileLayer, unsigned width, unsigned height, unsigned tileSize) {
-    unsigned subTiles = tileSize / GBA_TILE_SIZE;
-    unsigned screenWidth = width * subTiles;
-    unsigned screenHeight = height * subTiles;
-    vector<uint16_t> bytes(screenWidth * screenHeight, 0);
-    const auto& tiles = tileLayer->getTiles();
+vector<uint16_t> TileLayerConverter::convertCrop(const vector<tmx::TileLayer::Tile> &tiles,
+                                                 unsigned size, unsigned subTiles) {
+    vector<uint16_t> cropBytes(size * size * subTiles * subTiles, 0);
 
-    for (unsigned row = 0; row < height; row++) {
-        for (unsigned col = 0; col < width; col++) {
-            auto tile = tiles[coordToIndex(row, col, width)];
+    for (unsigned row = 0; row < size; row++) {
+        for (unsigned col = 0; col < size; col++) {
+            auto tile = tiles[coordToIndex(row, col, size)];
             bool flipH = tile.flipFlags == tmx::TileLayer::FlipFlag::Horizontal;
             bool flipV = tile.flipFlags == tmx::TileLayer::FlipFlag::Vertical;
             unsigned baseID = (tile.ID - d_firstGID) * subTiles * subTiles;
@@ -37,9 +43,27 @@ vector<uint16_t> TileLayerConverter::convert(const tmx::TileLayer *tileLayer, un
                     uint16_t screenEntry = convert(baseID + subRow * subTiles + subCol, flipH, flipV);
                     unsigned screenRow = row * subTiles + subRow;
                     unsigned screenCol = col * subTiles + subCol;
-                    bytes[coordToIndex(screenRow, screenCol, screenWidth)] = screenEntry;
+                    cropBytes[coordToIndex(screenRow, screenCol, size * subTiles)] = screenEntry;
                 }
             }
+        }
+    }
+
+    return cropBytes;
+}
+
+vector<uint16_t> TileLayerConverter::convert(const tmx::TileLayer *tileLayer, unsigned width, unsigned height, unsigned tileSize) {
+    vector<uint16_t> bytes;
+    const vector<tmx::TileLayer::Tile> &tiles = tileLayer->getTiles();
+
+    unsigned subTiles = tileSize / GBA_TILE_SIZE;
+    unsigned screenBlockSize = GBA_MAP_SIZE / subTiles;
+
+    for (unsigned row = 0; row < height; row += screenBlockSize) {
+        for (unsigned col = 0; col < width; col += screenBlockSize) {
+            vector<tmx::TileLayer::Tile> cropTiles = selectCrop(tiles, row, col, width, screenBlockSize);
+            vector<uint16_t> cropBytes = convertCrop(cropTiles, screenBlockSize, subTiles);
+            bytes.insert( bytes.end(), cropBytes.begin(), cropBytes.end());
         }
     }
 
