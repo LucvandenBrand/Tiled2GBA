@@ -41,6 +41,13 @@ void GBAMap::toCode(ostream &headerFile, ostream &codeFile) {
     }
 }
 
+void GBAMap::toBinary(ostream &binFile) {
+    writeBinary(binFile, d_sizeFlag);
+    writeBinary(binFile, d_palette);
+    writeBinary(binFile, d_tileSet);
+    writeBinary(binFile, d_tileLayers);
+}
+
 void GBAMap::makeFlagDefinition(ostream &headerStream, const string &name, uint16_t flag) {
     headerStream << "#define " << name << " 0x" << setfill('0') << setw(4) << hex << (int) flag << endl << endl;
 }
@@ -69,3 +76,15 @@ void GBAMap::makeArrayDefinition(ostream &codeStream, const string &name, vector
     codeStream << endl << "};" << endl << endl;
 }
 
+template<typename T>
+ostream& GBAMap::writeBinary(ostream &stream, const T &value) {
+    return stream.write(reinterpret_cast<const char*>(&value), sizeof(T));
+}
+
+template<typename T>
+ostream& GBAMap::writeBinary(ostream &stream, const vector<T> &vec) {
+    writeBinary(stream, (u_int16_t) vec.size());
+    for (const T &value : vec)
+        writeBinary(stream, value);
+    return stream;
+}
