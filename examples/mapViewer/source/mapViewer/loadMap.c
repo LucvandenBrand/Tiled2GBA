@@ -2,12 +2,13 @@
 #include "../gbaLib/video/background.h"
 #include "../map/map.h"
 #include "../gbaLib/gbfs/gbfs.h"
+#include "./mapViewer.h"
 
 void loadMap()
 {
     const GBFS_FILE *mapFile = find_first_gbfs_file(find_first_gbfs_file);
     u32 mapDataSize = 0;
-    const u16 *mapData = gbfs_get_obj(mapFile, "map.bin", &mapDataSize);
+    const u16 *mapData = gbfs_get_obj(mapFile, MAP_BINARY_NAME, &mapDataSize);
 
     const u16 *palette = NULL, *tileSet = NULL, *tileMap = NULL;
     u16 sizeFlag = 0, paletteLength = 0, tileSetLength = 0, tileMapLength = 0;
@@ -30,21 +31,21 @@ void loadMap()
         u32 index = 0;
         sizeFlag = mapData[index++];
 
-        paletteLength = mapData[index++] * 2;
+        paletteLength = mapData[index++];
         palette = &mapData[index];
-        index += paletteLength / 2 + 1;
+        index += paletteLength + 1;
 
-        tileSetLength = mapData[index++] * 2;
+        tileSetLength = mapData[index++];
         tileSet = &mapData[index];
-        index += tileSetLength / 2 + 1;
+        index += tileSetLength + 1;
 
-        tileMapLength = mapData[index++] * 2;
+        tileMapLength = mapData[index++];
         tileMap = &mapData[index];
     }
 
-    memcpy(MEMORY_BACKGROUND_PALETTE, palette, paletteLength);
-    memcpy(&MEMORY_CHAR_BLOCK[0][0], tileSet, tileSetLength);
-    memcpy(&MEMORY_SCREEN_BLOCK[30][0], tileMap, tileMapLength);
+    memcpy(MEMORY_BACKGROUND_PALETTE, palette, paletteLength * 2);
+    memcpy(&MEMORY_CHAR_BLOCK[0][0], tileSet, tileSetLength * 2);
+    memcpy(&MEMORY_SCREEN_BLOCK[30][0], tileMap, tileMapLength * 2);
 
     REGISTER_BACKGROUND_CONTROL[0] = FLAG_BACKGROUND_CHAR_BLOCK(0)    |
                                      FLAG_BACKGROUND_SCREEN_BLOCK(30) |

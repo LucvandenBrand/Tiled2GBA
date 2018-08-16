@@ -27,9 +27,9 @@ vector<uint16_t> TileSetConverter::getPalette() {
     return d_paletteBytes;
 }
 
-unsigned char TileSetConverter::remap(unsigned char byte, unsigned char max, unsigned char newMax) {
+uint8_t TileSetConverter::remap(uint8_t byte, uint8_t max, uint8_t newMax) {
     float ratio = 1.0f * byte / max;
-    return (unsigned char) (ratio * newMax);
+    return (uint8_t) (ratio * newMax);
 }
 
 uint8_t TileSetConverter::addColor(Color color) {

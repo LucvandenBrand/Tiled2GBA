@@ -3,6 +3,8 @@
 
 #include "../gbaLib/video/background.h"
 
+#define MAP_BINARY_NAME "map.bin"
+
 /**
  * Load the map into memory.
  */

@@ -18,6 +18,4 @@ int main()
 
         shiftMap(shift);
     }
-
-    return 0;
 }
