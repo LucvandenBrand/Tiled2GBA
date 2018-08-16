@@ -40,7 +40,7 @@ int main(int argc, char **argv)
                         ("v, verbose", "Print all log messages.")
                         ("w, warn", "Only print warnings and error messages.")
                         ("b, binary", "Export to binary.")
-                        ("f, files", "File paths.", cxxopts::value<vector<string>>());
+                        ("n, files", "File paths.", cxxopts::value<vector<string>>());
 
         options.parse_positional({"files"});
 
@@ -93,7 +93,8 @@ int main(int argc, char **argv)
 
         string filePath = filePaths[1];
         ofstream binFile;
-        binFile.open (filePath);
+        binFile.open(filePath, ios_base::out | ios_base::binary);
+        binFile.imbue(locale::classic());
 
         gbaMap.toBinary(binFile);
 
@@ -106,8 +107,8 @@ int main(int argc, char **argv)
         string cFilePath = filePaths[1];
         string hFilePath = filePaths[2];
         ofstream codeFile, headerFile;
-        codeFile.open (cFilePath);
-        headerFile.open (hFilePath);
+        codeFile.open(cFilePath);
+        headerFile.open(hFilePath);
 
         gbaMap.toCode(headerFile, codeFile);
 

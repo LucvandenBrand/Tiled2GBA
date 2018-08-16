@@ -42,10 +42,15 @@ void GBAMap::toCode(ostream &headerFile, ostream &codeFile) {
 }
 
 void GBAMap::toBinary(ostream &binFile) {
-    writeBinary(binFile, d_sizeFlag);
-    writeBinary(binFile, d_palette);
-    writeBinary(binFile, d_tileSet);
-    writeBinary(binFile, d_tileLayers);
+    unsigned byteCount = 0;
+    writeBinary(binFile, d_sizeFlag, &byteCount);
+    writeBinary(binFile, d_palette, &byteCount);
+
+    writeBinary(binFile, (uint16_t) 0x0000, &byteCount);
+    writeBinary(binFile, d_tileSet, &byteCount);
+
+    writeBinary(binFile, (uint16_t) 0x0000, &byteCount);
+    writeBinary(binFile, d_tileLayers[0], &byteCount);
 }
 
 void GBAMap::makeFlagDefinition(ostream &headerStream, const string &name, uint16_t flag) {
@@ -77,14 +82,15 @@ void GBAMap::makeArrayDefinition(ostream &codeStream, const string &name, vector
 }
 
 template<typename T>
-ostream& GBAMap::writeBinary(ostream &stream, const T &value) {
+ostream& GBAMap::writeBinary(ostream &stream, const T &value, unsigned *byteCount) {
+    *byteCount += sizeof(T);
     return stream.write(reinterpret_cast<const char*>(&value), sizeof(T));
 }
 
 template<typename T>
-ostream& GBAMap::writeBinary(ostream &stream, const vector<T> &vec) {
-    writeBinary(stream, (u_int16_t) vec.size());
+ostream& GBAMap::writeBinary(ostream &stream, const vector<T> &vec, unsigned *byteCount) {
+    writeBinary(stream, (u_int16_t) vec.size(), byteCount);
     for (const T &value : vec)
-        writeBinary(stream, value);
+        writeBinary(stream, value, byteCount);
     return stream;
 }

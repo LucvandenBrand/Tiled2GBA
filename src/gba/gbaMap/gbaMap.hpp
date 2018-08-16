@@ -65,9 +65,9 @@ private:
     void makeArrayDefinition(ostream &codeStream, const string &name, vector<uint16_t> &bytes);
 
     template<typename T>
-    ostream& writeBinary(ostream& stream, const T& value);
+    ostream& writeBinary(ostream &stream, const T& value, unsigned *byteCount);
     template<typename T>
-    ostream& writeBinary(ostream &stream, const vector<T> &vec);
+    ostream& writeBinary(ostream &stream, const vector<T> &vec, unsigned *byteCount);
 
     const int SIZE_FLAG_OFFSET = 14;
     const int LINE_LENGTH = 15;
