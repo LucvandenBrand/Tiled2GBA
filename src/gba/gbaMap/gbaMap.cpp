@@ -44,13 +44,18 @@ void GBAMap::toCode(ostream &headerFile, ostream &codeFile) {
 void GBAMap::toBinary(ostream &binFile) {
     unsigned byteCount = 0;
     writeBinary(binFile, d_sizeFlag, &byteCount);
+    writeBinary(binFile, (u_int16_t) d_palette.size(), &byteCount);
     writeBinary(binFile, d_palette, &byteCount);
 
     writeBinary(binFile, PADDING_16_BIT, &byteCount);
+    writeBinary(binFile, (u_int16_t) d_tileSet.size(), &byteCount);
     writeBinary(binFile, d_tileSet, &byteCount);
 
-    writeBinary(binFile, PADDING_16_BIT, &byteCount);
-    writeBinary(binFile, d_tileLayers[0], &byteCount);
+    writeBinary(binFile, (u_int16_t) d_tileLayers.size(), &byteCount);
+    if (!d_tileLayers.empty()) {
+        writeBinary(binFile, (u_int16_t) d_tileLayers[0].size(), &byteCount);
+        writeBinary(binFile, d_tileLayers, &byteCount);
+    }
 }
 
 void GBAMap::makeFlagDefinition(ostream &headerStream, const string &name, uint16_t flag) {
@@ -91,7 +96,6 @@ ostream& GBAMap::writeBinary(ostream &stream, const T &value, unsigned *byteCoun
 
 template<typename T>
 ostream& GBAMap::writeBinary(ostream &stream, const vector<T> &vec, unsigned *byteCount) {
-    writeBinary(stream, (u_int16_t) vec.size(), byteCount);
     for (const T &value : vec)
         writeBinary(stream, value, byteCount);
     return stream;

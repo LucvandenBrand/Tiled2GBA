@@ -10,21 +10,23 @@ void loadMap()
     u32 mapDataSize = 0;
     const u16 *mapData = gbfs_get_obj(mapFile, MAP_BINARY_NAME, &mapDataSize);
 
-    const u16 *palette = NULL, *tileSet = NULL, *tileMap = NULL;
-    u16 sizeFlag = 0, paletteLength = 0, tileSetLength = 0, tileMapLength = 0;
+    const u16 *palette = NULL, *tileSet = NULL;
+    const u16 *tileMapLayers[3] = {NULL, NULL, NULL};
+    u16 sizeFlag = 0, paletteLength = 0, tileSetLength = 0, numLayers = 0, tileMapLength = 0;
 
     if (mapData == NULL)
     {
         sizeFlag = mapSizeFlag;
 
-        palette = &mapPalette[0];
         paletteLength = mapPaletteLength;
+        palette = &mapPalette[0];
 
-        tileSet = &mapTileSet[0];
         tileSetLength = mapTileSetLength;
+        tileSet = &mapTileSet[0];
 
-        tileMap = &mapTileMap0[0];
+        numLayers = 1;
         tileMapLength = mapTileMap0Length;
+        tileMapLayers[0] = &mapTileMap0[0];
     }
     else
     {
@@ -37,19 +39,35 @@ void loadMap()
 
         tileSetLength = mapData[index++];
         tileSet = &mapData[index];
-        index += tileSetLength + 1;
+        index += tileSetLength;
 
+        numLayers = mapData[index++];
+        numLayers = numLayers > MAX_LAYERS ? MAX_LAYERS : numLayers;
         tileMapLength = mapData[index++];
-        tileMap = &mapData[index];
+        for (u32 layerIndex = 0; layerIndex < numLayers; ++layerIndex)
+        {
+            tileMapLayers[layerIndex] = &mapData[index];
+            index += tileMapLength;
+        }
     }
 
     memcpy(MEMORY_BACKGROUND_PALETTE, palette, paletteLength * 2);
     memcpy(&MEMORY_CHAR_BLOCK[0][0], tileSet, tileSetLength * 2);
-    memcpy(&MEMORY_SCREEN_BLOCK[30][0], tileMap, tileMapLength * 2);
 
-    REGISTER_BACKGROUND_CONTROL[0] = FLAG_BACKGROUND_CHAR_BLOCK(0)    |
-                                     FLAG_BACKGROUND_SCREEN_BLOCK(30) |
-                                     FLAG_BACKGROUND_8BPP             |
-                                     sizeFlag;
-    REGISTER_DISPLAY_CONTROL = FLAG_MODE0 | FLAG_BACKGROUND0;
+    u32 screenBlockStep = tileMapLength / ENTRIES_IN_SCREEN_BLOCK;
+    u32 usedBackgrounds = 0x00;
+    for (u32 layerIndex = numLayers; layerIndex-- > 0;)
+    {
+        u32 screenBlockIndex = NUM_SCREEN_BLOCKS - screenBlockStep * (layerIndex + 1);
+        memcpy(&MEMORY_SCREEN_BLOCK[screenBlockIndex][0], tileMapLayers[layerIndex], tileMapLength * 2);
+
+        REGISTER_BACKGROUND_CONTROL[layerIndex] = FLAG_BACKGROUND_CHAR_BLOCK(0)                  |
+                                                  FLAG_BACKGROUND_SCREEN_BLOCK(screenBlockIndex) |
+                                                  FLAG_BACKGROUND_8BPP                           |
+                                                  sizeFlag                                       |
+                                                  FLAG_BACKGROUND_PRIORITY(numLayers - layerIndex);
+        usedBackgrounds |= FLAG_BACKGROUND(layerIndex);
+    }
+
+    REGISTER_DISPLAY_CONTROL = FLAG_MODE0 | usedBackgrounds;
 }

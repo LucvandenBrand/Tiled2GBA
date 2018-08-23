@@ -34,6 +34,7 @@ private:
     uint8_t remap(uint8_t byte, uint8_t max, uint8_t newMax);
     uint8_t addColor(Color color);
     void parseSheet(Image image, unsigned tileSize);
+    void generateColorTile(const Color &color);
 
     vector<uint16_t> d_tileBytes;
     vector<uint16_t> d_paletteBytes;
