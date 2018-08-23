@@ -66,8 +66,7 @@ void TileSetConverter::parseSheet(Image image, unsigned tileSize) {
             Color secondColor   = retiledImage.getPixel(row, col + 1);
             uint8_t secondPixel = addColor(secondColor);
 
-            uint16_t combinedPixel = firstPixel | (secondPixel << 8);
-            d_tileBytes.push_back(combinedPixel);
+            d_tileBytes.push_back(combinePixels(firstPixel, secondPixel));
         }
     }
 
@@ -78,8 +77,11 @@ void TileSetConverter::generateColorTile(const Color &color) {
     uint8_t pixel = addColor(color);
     for (unsigned row = 0; row < GBA_TILE_SIZE; row++) {
         for (unsigned col = 0; col < GBA_TILE_SIZE; col += 2) {
-            uint16_t combinedPixel = pixel | (pixel << 8);
-            d_tileBytes.push_back(combinedPixel);
+            d_tileBytes.push_back(combinePixels(pixel, pixel));
         }
     }
+}
+
+uint16_t TileSetConverter::combinePixels(uint8_t firstPixel, uint8_t secondPixel) {
+    return firstPixel | (secondPixel << 8);
 }

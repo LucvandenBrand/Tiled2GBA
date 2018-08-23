@@ -69,7 +69,7 @@ vector<uint16_t> TileLayerConverter::convert(const tmx::TileLayer *tileLayer, un
         for (unsigned col = 0; col < width; col += screenBlockSize) {
             vector<tmx::TileLayer::Tile> cropTiles = selectCrop(tiles, row, col, width, screenBlockSize);
             vector<uint16_t> cropBytes = convertCrop(cropTiles, screenBlockSize, subTiles);
-            bytes.insert( bytes.end(), cropBytes.begin(), cropBytes.end());
+            bytes.insert(bytes.end(), cropBytes.begin(), cropBytes.end());
         }
     }
 
