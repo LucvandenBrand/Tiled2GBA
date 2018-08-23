@@ -14,11 +14,11 @@ void printHeader() {
 
 string pathToName(string path) {
     const size_t last_slash_idx = path.find_last_of("\\/");
-    if (std::string::npos != last_slash_idx)
+    if (string::npos != last_slash_idx)
         path.erase(0, last_slash_idx + 1);
 
     const size_t period_idx = path.rfind('.');
-    if (std::string::npos != period_idx)
+    if (string::npos != period_idx)
         path.erase(period_idx);
 
     return path;
@@ -30,6 +30,7 @@ int main(int argc, char **argv)
     auto &log = *logger;
 
     vector<string> filePaths;
+    bool toBinary = false;
 
     try {
         cxxopts::Options options(argv[0], "Allows you to convert Tiled TMX files to GBA compatible data.");
@@ -38,7 +39,8 @@ int main(int argc, char **argv)
                         ("h, help", "Print this help screen.")
                         ("v, verbose", "Print all log messages.")
                         ("w, warn", "Only print warnings and error messages.")
-                        ("f, files", "File paths.", cxxopts::value<vector<string>>(), "map.tmx map.c map.h");
+                        ("b, binary", "Export to binary.")
+                        ("n, files", "File paths.", cxxopts::value<vector<string>>());
 
         options.parse_positional({"files"});
 
@@ -59,6 +61,9 @@ int main(int argc, char **argv)
             logger->setLogLevel(ERROR);
         }
 
+        if (result.count("binary"))
+            toBinary = true;
+
         if (result.count("files"))
             filePaths = result["files"].as<vector<string>>();
 
@@ -67,7 +72,7 @@ int main(int argc, char **argv)
         exit(EXIT_FAILURE);
     }
 
-    if (filePaths.size() < 3) {
+    if (filePaths.size() < 3 && !(toBinary && filePaths.size() > 1)) {
         log(ERROR, "Please provide input and output files as positional arguments.");
         return EXIT_FAILURE;
     }
@@ -83,20 +88,35 @@ int main(int argc, char **argv)
     MapConverter mapConverter;
     GBAMap gbaMap = mapConverter.convert(mapName, tmxMap);
 
-    log(INFO, "Generating code.");
+    if (toBinary) {
+        log(INFO, "Generating binary.");
 
-    string cFilePath = filePaths[1];
-    string hFilePath = filePaths[2];
-    ofstream codeFile, headerFile;
-    codeFile.open (cFilePath);
-    headerFile.open (hFilePath);
+        string filePath = filePaths[1];
+        ofstream binFile;
+        binFile.open(filePath, ios_base::out | ios_base::binary);
+        binFile.imbue(locale::classic());
 
-    gbaMap.toCode(headerFile, codeFile);
+        gbaMap.toBinary(binFile);
 
-    codeFile.close();
-    headerFile.close();
+        binFile.close();
 
-    log(INFO, "Code stored in '" + cFilePath + "' and '" + hFilePath + "'.");
+        log(INFO, "Binary stored in '" + filePath + "'.");
+    } else {
+        log(INFO, "Generating code.");
+
+        string cFilePath = filePaths[1];
+        string hFilePath = filePaths[2];
+        ofstream codeFile, headerFile;
+        codeFile.open(cFilePath);
+        headerFile.open(hFilePath);
+
+        gbaMap.toCode(headerFile, codeFile);
+
+        codeFile.close();
+        headerFile.close();
+
+        log(INFO, "Code stored in '" + cFilePath + "' and '" + hFilePath + "'.");
+    }
 
     return EXIT_SUCCESS;
 }

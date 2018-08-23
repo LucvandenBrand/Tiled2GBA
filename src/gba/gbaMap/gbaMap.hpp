@@ -52,14 +52,32 @@ public:
      */
     void toCode(ostream &headerFile, ostream &codeFile);
 
+    /**
+     * Convert the map data to binary data.
+     * @param binFile  The binary file to store the data in.
+     */
+    void toBinary(ostream &binFile);
+
 private:
     void makeFlagDefinition(ostream &headerStream, const string &name, uint16_t flag);
 
     void makeArrayDeclaration(ostream &headerStream, const string &name, vector<uint16_t> &bytes);
     void makeArrayDefinition(ostream &codeStream, const string &name, vector<uint16_t> &bytes);
 
+    template<typename T>
+    ostream& writeBinary(ostream &stream, const T& value, unsigned *byteCount);
+    template<typename T>
+    ostream& writeBinary(ostream &stream, const vector<T> &vec, unsigned *byteCount);
+
     const int SIZE_FLAG_OFFSET = 14;
     const int LINE_LENGTH = 15;
+
+    const char *SIZE_FLAG_NAME = "SizeFlag";
+    const char *PALETTE_NAME = "Palette";
+    const char *TILE_SET_NAME = "TileSet";
+    const char *TILE_MAP_NAME = "TileMap";
+
+    const uint16_t PADDING_16_BIT = 0x0000;
 
     uint16_t d_sizeFlag;
     vector<uint16_t> d_palette, d_tileSet;

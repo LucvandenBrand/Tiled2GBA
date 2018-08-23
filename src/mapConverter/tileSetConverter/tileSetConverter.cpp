@@ -27,9 +27,9 @@ vector<uint16_t> TileSetConverter::getPalette() {
     return d_paletteBytes;
 }
 
-unsigned char TileSetConverter::remap(unsigned char byte, unsigned char max, unsigned char newMax) {
+uint8_t TileSetConverter::remap(uint8_t byte, uint8_t max, uint8_t newMax) {
     float ratio = 1.0f * byte / max;
-    return (unsigned char) (ratio * newMax);
+    return (uint8_t) (ratio * newMax);
 }
 
 uint8_t TileSetConverter::addColor(Color color) {
@@ -49,7 +49,7 @@ uint8_t TileSetConverter::addColor(Color color) {
 }
 
 void TileSetConverter::parseSheet(Image image, unsigned tileSize) {
-    addColor(BLACK);
+    generateColorTile(BLACK);
 
     ImageRetiler retiler;
     Image retiledImage = retiler.retile(image, tileSize);
@@ -61,15 +61,27 @@ void TileSetConverter::parseSheet(Image image, unsigned tileSize) {
     for (unsigned row = 0; row < retiledImage.getHeight(); row++) {
         for (unsigned col = 0; col < retiledImage.getWidth(); col += 2) {
             Color firstColor   = retiledImage.getPixel(row, col);
-            uint8_t firstPixel =  addColor(firstColor);
+            uint8_t firstPixel = addColor(firstColor);
 
             Color secondColor   = retiledImage.getPixel(row, col + 1);
-            uint8_t secondPixel =  addColor(secondColor);
+            uint8_t secondPixel = addColor(secondColor);
 
-            uint16_t pixel = firstPixel | (secondPixel << 8);
-            d_tileBytes.push_back(pixel);
+            d_tileBytes.push_back(combinePixels(firstPixel, secondPixel));
         }
     }
 
     d_paletteBytes.resize(PALETTE_COLORS, 0x0000);
+}
+
+void TileSetConverter::generateColorTile(const Color &color) {
+    uint8_t pixel = addColor(color);
+    for (unsigned row = 0; row < GBA_TILE_SIZE; row++) {
+        for (unsigned col = 0; col < GBA_TILE_SIZE; col += 2) {
+            d_tileBytes.push_back(combinePixels(pixel, pixel));
+        }
+    }
+}
+
+uint16_t TileSetConverter::combinePixels(uint8_t firstPixel, uint8_t secondPixel) {
+    return firstPixel | (secondPixel << 8);
 }
