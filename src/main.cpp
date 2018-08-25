@@ -14,11 +14,11 @@ void printHeader() {
 
 string pathToName(string path) {
     const size_t last_slash_idx = path.find_last_of("\\/");
-    if (std::string::npos != last_slash_idx)
+    if (string::npos != last_slash_idx)
         path.erase(0, last_slash_idx + 1);
 
     const size_t period_idx = path.rfind('.');
-    if (std::string::npos != period_idx)
+    if (string::npos != period_idx)
         path.erase(period_idx);
 
     return path;

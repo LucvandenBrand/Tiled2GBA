@@ -33,7 +33,7 @@ Contributions are always welcome! You can make a contribution by:
 
 1. Creating an issue, be sure your contribution has not been claimed by somebody else!
 2. Forking the project.
-3. Creating a pull-request to merge your solution back into this repository.
+3. Creating a pull-request to merge your solution back into the **develop** branch of this repository.
 
 The **develop** branch is meant for in-development unstable releases, 
 whilst the **master** branch is meant for stable production-ready releases.
