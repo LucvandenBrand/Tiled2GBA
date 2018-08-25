@@ -4,7 +4,7 @@
 #include "../gbaLib/gbfs/gbfs.h"
 #include "./mapViewer.h"
 
-void loadMap()
+u16 loadMap()
 {
     const GBFS_FILE *mapFile = find_first_gbfs_file(find_first_gbfs_file);
     u32 mapDataSize = 0;
@@ -70,4 +70,6 @@ void loadMap()
     }
 
     REGISTER_DISPLAY_CONTROL = FLAG_MODE0 | usedBackgrounds;
+
+    return numLayers;
 }

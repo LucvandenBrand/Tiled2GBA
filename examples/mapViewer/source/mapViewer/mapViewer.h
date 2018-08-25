@@ -10,12 +10,15 @@
 
 /**
  * Load the map into memory.
+ * @returns The number of layers in the loaded map.
  */
-void loadMap();
+u16 loadMap();
 
 /**
- * Shift the map to (offset.x, offset.y).
+ * Shift a map layer to (offset.x, offset.y).
+ * @param layer The map layer to shift.
+ * @param offset The offset to shift.
  **/
-void shiftMap(BGPoint offset);
+void shiftMap(u16 layer, BGPoint offset);
 
 #endif // MAP_VIEWER_H

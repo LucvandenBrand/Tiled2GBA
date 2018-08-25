@@ -10,6 +10,9 @@
 TileSetConverter::TileSetConverter(const tmx::Tileset &tileSet) {
     auto log = *Logger::getInstance();
     try {
+        Color transparentColor = tmxColourToColor(tileSet.getTransparencyColour());
+        generateColorTile(transparentColor);
+
         Image image(tileSet.getImagePath());
         auto tileSize = tileSet.getTileSize();
         parseSheet(image, tileSize.x);
@@ -48,9 +51,16 @@ uint8_t TileSetConverter::addColor(Color color) {
     return (uint8_t) (d_paletteBytes.size() - 1);
 }
 
-void TileSetConverter::parseSheet(Image image, unsigned tileSize) {
-    generateColorTile(BLACK);
+Color TileSetConverter::tmxColourToColor(tmx::Colour colour) {
+    Color color;
+    color.red   = colour.r;
+    color.green = colour.g;
+    color.blue  = colour.b;
+    color.alpha = colour.a;
+    return color;
+}
 
+void TileSetConverter::parseSheet(Image image, unsigned tileSize) {
     ImageRetiler retiler;
     Image retiledImage = retiler.retile(image, tileSize);
 
