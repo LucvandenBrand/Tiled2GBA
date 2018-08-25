@@ -67,7 +67,7 @@ GBAMap MapConverter::convert(const string &name, const tmx::Map &tmxMap) {
     const auto& layers = tmxMap.getLayers();
     if (layers.size() > GBA_LAYERS) {
         log(WARN, "This map has " + to_string(layers.size())
-                  + ", which is " + to_string(GBA_LAYERS - layers.size())
+                  + " layers, which is " + to_string(layers.size() - GBA_LAYERS)
                   + " more than than the GBA has natively.");
     }
 

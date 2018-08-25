@@ -72,6 +72,13 @@ private:
     const int SIZE_FLAG_OFFSET = 14;
     const int LINE_LENGTH = 15;
 
+    const char *SIZE_FLAG_NAME = "SizeFlag";
+    const char *PALETTE_NAME = "Palette";
+    const char *TILE_SET_NAME = "TileSet";
+    const char *TILE_MAP_NAME = "TileMap";
+
+    const uint16_t PADDING_16_BIT = 0x0000;
+
     uint16_t d_sizeFlag;
     vector<uint16_t> d_palette, d_tileSet;
     vector<vector<uint16_t>> d_tileLayers;

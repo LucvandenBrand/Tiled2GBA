@@ -36,11 +36,17 @@ vector<uint16_t> TileLayerConverter::convertCrop(const vector<tmx::TileLayer::Ti
             auto tile = tiles[coordToIndex(row, col, size)];
             bool flipH = tile.flipFlags == tmx::TileLayer::FlipFlag::Horizontal;
             bool flipV = tile.flipFlags == tmx::TileLayer::FlipFlag::Vertical;
+
             unsigned baseID = (tile.ID - d_firstGID) * subTiles * subTiles;
+            bool isEmpty = baseID < 0;
 
             for (unsigned subRow = 0; subRow < subTiles; subRow++) {
                 for (unsigned subCol = 0; subCol < subTiles; subCol++) {
-                    uint16_t screenEntry = convert(baseID + subRow * subTiles + subCol, flipH, flipV);
+                    unsigned subTileID = 0;
+                    if (!isEmpty)
+                        subTileID = baseID + subRow * subTiles + subCol + 1;
+
+                    uint16_t screenEntry = convert(subTileID, flipH, flipV);
                     unsigned screenRow = row * subTiles + subRow;
                     unsigned screenCol = col * subTiles + subCol;
                     cropBytes[coordToIndex(screenRow, screenCol, size * subTiles)] = screenEntry;
@@ -63,7 +69,7 @@ vector<uint16_t> TileLayerConverter::convert(const tmx::TileLayer *tileLayer, un
         for (unsigned col = 0; col < width; col += screenBlockSize) {
             vector<tmx::TileLayer::Tile> cropTiles = selectCrop(tiles, row, col, width, screenBlockSize);
             vector<uint16_t> cropBytes = convertCrop(cropTiles, screenBlockSize, subTiles);
-            bytes.insert( bytes.end(), cropBytes.begin(), cropBytes.end());
+            bytes.insert(bytes.end(), cropBytes.begin(), cropBytes.end());
         }
     }
 

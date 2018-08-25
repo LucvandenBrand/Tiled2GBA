@@ -3,6 +3,11 @@
 
 #include "../gbaLib/video/background.h"
 
+#define MAP_BINARY_NAME "map.bin"
+#define MAX_LAYERS 3
+#define ENTRIES_IN_SCREEN_BLOCK 512
+#define NUM_SCREEN_BLOCKS 31
+
 /**
  * Load the map into memory.
  */
