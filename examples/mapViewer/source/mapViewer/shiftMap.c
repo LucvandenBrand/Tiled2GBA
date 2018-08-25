@@ -1,6 +1,6 @@
 #include "../gbaLib/video/background.h"
 
-void shiftMap(BGPoint offset)
+void shiftMap(u16 layer, BGPoint offset)
 {
-    REGISTER_BACKGROUND_OFFSET[0] = offset;
+    REGISTER_BACKGROUND_OFFSET[layer] = offset;
 }
