@@ -2,6 +2,7 @@
 #define MAP_VIEWER_H
 
 #include "../gbaLib/video/background.h"
+#include "./map/map.h"
 
 #define MAP_BINARY_NAME "map.bin"
 #define MAX_LAYERS 3
@@ -13,6 +14,9 @@
  * @returns The number of layers in the loaded map.
  */
 u16 loadMap();
+
+Map loadMapFromROM(const u16 *mapData);
+Map loadMapFromCode();
 
 /**
  * Shift a map layer to (offset.x, offset.y).
