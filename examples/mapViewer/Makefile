@@ -5,7 +5,7 @@ PATH := $(DEVKITARM)/bin:$(PATH)
 PROJ    := mapViewer
 TITLE   := $(PROJ)
 
-GAMEOBJS   := main.o map/loadMap.o map/loadMapFromCode.o map/loadMapFromROM.o shiftMap.o
+GAMEOBJS   := main.o map/loadMap.o map/loadMapFromCode.o map/loadMapFromROM.o map/setMapOnScreen.o shiftMap.o
 ASSETSOBJS := map.o
 LIBOBJS    := gbfs/libgbfs.o
 

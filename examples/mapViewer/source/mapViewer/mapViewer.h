@@ -9,14 +9,11 @@
 #define ENTRIES_IN_SCREEN_BLOCK 512
 #define NUM_SCREEN_BLOCKS 31
 
-/**
- * Load the map into memory.
- * @returns The number of layers in the loaded map.
- */
-u16 loadMap();
-
+Map loadMap();
 Map loadMapFromROM(const u16 *mapData);
 Map loadMapFromCode();
+
+void setMapOnScreen(Map map);
 
 /**
  * Shift a map layer to (offset.x, offset.y).

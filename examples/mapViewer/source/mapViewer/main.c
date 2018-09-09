@@ -4,7 +4,8 @@
 
 int main()
 {
-    u16 numLayers = loadMap();
+    Map map = loadMap();
+    setMapOnScreen(map);
 
     const int SHIFT_SPEED = 2;
     BGPoint shift = {0, 0};
@@ -16,7 +17,7 @@ int main()
         shift.y += getYAxis(inputState) * SHIFT_SPEED;
         shift.x += getXAxis(inputState) * SHIFT_SPEED;
 
-        for (u16 layer = 0; layer < numLayers; layer++)
+        for (u16 layer = 0; layer < map.numLayers; layer++)
             shiftMap(layer, shift);
     }
 }
