@@ -64,6 +64,10 @@ GBAMap MapConverter::convert(const string &name, const tmx::Map &tmxMap) {
     auto paletteBytes = tileSetConverter->getPalette();
     gbaMap.setPalette(paletteBytes);
 
+    log(INFO, "Converting terrain.");
+    auto terrainMap = tileSetConverter->getTerrainMap();
+    gbaMap.setTerrainMap(terrainMap);
+
     const auto& layers = tmxMap.getLayers();
     if (layers.size() > GBA_LAYERS) {
         log(WARN, "This map has " + to_string(layers.size())

@@ -32,6 +32,12 @@ public:
     void setTileSet(vector<uint16_t> &bytes);
 
     /**
+     * Set the tile-terrain mapping.
+     * @param bytes The terrain types.
+     */
+    void setTerrainMap(vector<uint16_t> &bytes);
+
+    /**
      * Set the size of the map. Assumes the width and height are valid.
      * The width and height are converted to a flag for the GBA hardware to work with.
      * @param mapWidth The width of the map.
@@ -76,11 +82,12 @@ private:
     const char *PALETTE_NAME = "Palette";
     const char *TILE_SET_NAME = "TileSet";
     const char *TILE_MAP_NAME = "TileMap";
+    const char *TERRAIN_MAP_NAME = "TerrainMap";
 
     const uint16_t PADDING_16_BIT = 0x0000;
 
     uint16_t d_sizeFlag;
-    vector<uint16_t> d_palette, d_tileSet;
+    vector<uint16_t> d_palette, d_tileSet, d_terrainMap;
     vector<vector<uint16_t>> d_tileLayers;
 
     string d_name;

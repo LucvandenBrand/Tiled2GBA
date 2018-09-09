@@ -10,9 +10,9 @@ u16 loadMap()
     u32 mapDataSize = 0;
     const u16 *mapData = gbfs_get_obj(mapFile, MAP_BINARY_NAME, &mapDataSize);
 
-    const u16 *palette = NULL, *tileSet = NULL;
+    const u16 *palette = NULL, *tileSet = NULL, *terrainMap = NULL;
     const u16 *tileMapLayers[3] = {NULL, NULL, NULL};
-    u16 sizeFlag = 0, paletteLength = 0, tileSetLength = 0, numLayers = 0, tileMapLength = 0;
+    u16 sizeFlag = 0, paletteLength = 0, tileSetLength = 0, terrainMapLength = 0, numLayers = 0, tileMapLength = 0;
 
     if (mapData == NULL)
     {
@@ -39,7 +39,11 @@ u16 loadMap()
 
         tileSetLength = mapData[index++];
         tileSet = &mapData[index];
-        index += tileSetLength;
+        index += tileSetLength + 1;
+
+        terrainMapLength = mapData[index++];
+        terrainMap = &mapData[index];
+        index += terrainMapLength;
 
         numLayers = mapData[index++];
         numLayers = numLayers > MAX_LAYERS ? MAX_LAYERS : numLayers;
