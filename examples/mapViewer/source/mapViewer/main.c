@@ -1,10 +1,12 @@
 #include "../gbaLib/types.h"
 #include "mapViewer.h"
+#include "map/map.h"
 #include "../gbaLib/input/input.h"
 
 int main()
 {
-    u16 numLayers = loadMap();
+    Map map = loadMap();
+    setMapOnScreen(map);
 
     const int SHIFT_SPEED = 2;
     BGPoint shift = {0, 0};
@@ -16,7 +18,6 @@ int main()
         shift.y += getYAxis(inputState) * SHIFT_SPEED;
         shift.x += getXAxis(inputState) * SHIFT_SPEED;
 
-        for (u16 layer = 0; layer < numLayers; layer++)
-            shiftMap(layer, shift);
+        shiftMap(map, shift);
     }
 }

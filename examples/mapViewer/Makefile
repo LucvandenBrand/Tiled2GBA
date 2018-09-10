@@ -5,12 +5,12 @@ PATH := $(DEVKITARM)/bin:$(PATH)
 PROJ    := mapViewer
 TITLE   := $(PROJ)
 
-GAMEOBJS   := main.o loadMap.o shiftMap.o
+GAMEOBJS   := main.o map/loadMap.o map/loadMapFromCode.o map/loadMapFromROM.o map/setMapOnScreen.o shiftMap.o shiftMapLayer.o
 ASSETSOBJS := map.o
 LIBOBJS    := gbfs/libgbfs.o
 
 GAMEOBJS   := $(addprefix source/mapViewer/,$(GAMEOBJS))
-ASSETSOBJS := $(addprefix source/map/,$(ASSETSOBJS))
+ASSETSOBJS := $(addprefix source/asset/,$(ASSETSOBJS))
 LIBOBJS    := $(addprefix source/gbaLib/,$(LIBOBJS))
 
 OBJS	:= $(GAMEOBJS) $(ASSETSOBJS) $(LIBOBJS)
@@ -55,8 +55,8 @@ play: build
 	vba $(TARGET).gba
 
 append: $(TARGET).gba
-	./gbfs/gbfs map.gbfs map.bin  
-	./gbfs/padbin 256 $< 
+	./gbfs/gbfs map.gbfs map.bin
+	./gbfs/padbin 256 $<
 	cat $< map.gbfs > $(TARGET)_append.gba
 
 $(TARGET).gba : $(TARGET).elf
