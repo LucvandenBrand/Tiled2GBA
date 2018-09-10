@@ -1,8 +1,6 @@
+#include "map.h"
 #include <string.h>
 #include "../../gbaLib/video/background.h"
-#include "./map.h"
-#include "../../gbaLib/gbfs/gbfs.h"
-#include "../mapViewer.h"
 
 void setMapOnScreen(Map map) {
     memcpy(MEMORY_BACKGROUND_PALETTE, map.palette, map.paletteLength * 2);

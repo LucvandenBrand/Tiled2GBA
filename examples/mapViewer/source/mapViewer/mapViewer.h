@@ -2,24 +2,9 @@
 #define MAP_VIEWER_H
 
 #include "../gbaLib/video/background.h"
-#include "./map/map.h"
+#include "map/map.h"
 
-#define MAP_BINARY_NAME "map.bin"
-#define MAX_LAYERS 3
-#define ENTRIES_IN_SCREEN_BLOCK 512
-#define NUM_SCREEN_BLOCKS 31
-
-Map loadMap();
-Map loadMapFromROM(const u16 *mapData);
-Map loadMapFromCode();
-
-void setMapOnScreen(Map map);
-
-/**
- * Shift a map layer to (offset.x, offset.y).
- * @param layer The map layer to shift.
- * @param offset The offset to shift.
- **/
-void shiftMap(u16 layer, BGPoint offset);
+void shiftMap(Map map, BGPoint offset);
+void shiftMapLayer(u16 layer, BGPoint offset);
 
 #endif // MAP_VIEWER_H

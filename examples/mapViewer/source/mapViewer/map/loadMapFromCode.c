@@ -1,6 +1,5 @@
 #include "map.h"
-#include "../../map/map.h"
-#include "../mapViewer.h"
+#include "../../asset/map.h"
 
 Map loadMapFromCode() {
     Map map;

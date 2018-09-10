@@ -1,8 +1,6 @@
+#include "map.h"
 #include <string.h>
-#include "../../gbaLib/video/background.h"
-#include "./map.h"
 #include "../../gbaLib/gbfs/gbfs.h"
-#include "../mapViewer.h"
 
 Map loadMap()
 {
@@ -12,6 +10,6 @@ Map loadMap()
 
     if (mapData == NULL)
         return loadMapFromCode();
-        
+
     return loadMapFromROM(mapData);
 }
