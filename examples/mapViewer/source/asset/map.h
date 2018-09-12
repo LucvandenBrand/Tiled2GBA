@@ -3,8 +3,8 @@
 #define mapPaletteLength 256
 extern const unsigned short mapPalette[256];
 
-#define mapTileSetLength 544
-extern const unsigned short mapTileSet[544];
+#define mapTileSetLength 288
+extern const unsigned short mapTileSet[288];
 
 #define mapTerrainMapLength 16
 extern const unsigned short mapTerrainMap[16];
