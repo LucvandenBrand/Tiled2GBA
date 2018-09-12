@@ -6,7 +6,7 @@ TerrainConverter::TerrainConverter(unsigned tileSize) : d_tileSize(tileSize) {
 }
 
 vector<uint16_t> TerrainConverter::convertTerrainMap(const vector<tmx::Tileset::Tile> &tiles) {
-    vector<u_int16_t> terrainMapping(tiles.size() * d_numSubTiles, NO_TERRAIN);
+    vector<uint16_t> terrainMapping(tiles.size() * d_numSubTiles, NO_TERRAIN);
 
     int maxTileID = -1;
     for (tmx::Tileset::Tile tile : tiles) {
