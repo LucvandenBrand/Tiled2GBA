@@ -2,28 +2,38 @@
 #include "stringConverter.hpp"
 
 vector<uint16_t> StringConverter::convert(const string &text) {
+    const char* byteArray = text.c_str();
+    const char* paddedByteArray = createPaddedByteArray(byteArray);
+    auto numBytes = getByteArraySize(paddedByteArray);
     vector<uint16_t> bytes;
 
-    string paddedText = paddString(text);
-    auto numStringBytes = paddedText.length() + 1;
-
-    char characters[numStringBytes];
-    strcpy(characters, paddedText.c_str());
-
-    for (unsigned index = 0; index < numStringBytes; index += 2) {
-        auto mergedChar = (uint16_t) characters[index];
-        mergedChar |= (uint16_t) characters[index+1] << 8;
+    for (unsigned index = 0; index < numBytes; index += 2) {
+        auto mergedChar = (uint16_t) paddedByteArray[index] << 8;
+        mergedChar |= (uint16_t) paddedByteArray[index+1];
         bytes.push_back(mergedChar);
     }
 
     return bytes;
 }
 
-string StringConverter::paddString(string text) {
-    auto numStringBytes = text.length() + 1;
-    auto remainingBytes = 4 - numStringBytes % 4;
-    string appendedText = text;
-    appendedText.append(remainingBytes, ' ');
+const char* StringConverter::createPaddedByteArray(const char* byteArray) {
+    auto numBytes = getByteArraySize(byteArray);
+    unsigned remainingBytes = getAlignmentOffset(numBytes);
+    unsigned numBytesPadded = numBytes + remainingBytes;
+    char* paddedByteArray = new char[numBytesPadded];
 
-    return appendedText;
+    for (unsigned index = 0; index < numBytes; index++)
+        paddedByteArray[index] = byteArray[index];
+    for (unsigned index = numBytes; index < numBytesPadded; index++)
+        paddedByteArray[index] = '\0';
+
+    return paddedByteArray;
+}
+
+unsigned StringConverter::getByteArraySize(const char *byteArray) {
+    return (unsigned) strlen(byteArray) + 1;
+}
+
+unsigned StringConverter::getAlignmentOffset(unsigned size) {
+    return sizeof(uint32_t) - size % sizeof(uint32_t);
 }

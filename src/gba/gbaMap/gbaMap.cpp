@@ -23,6 +23,10 @@ void GBAMap::setTerrainMap(vector<uint16_t> &bytes) {
     d_terrainMap = bytes;
 }
 
+void GBAMap::addObjects(vector<uint16_t> &bytes) {
+    d_objects = bytes;
+}
+
 void GBAMap::setSize(unsigned mapWidth, unsigned mapHeight) {
     auto widthFlag  = (uint16_t) (mapWidth  == GBA_MAP_SIZE ? 0 : 1);
     auto heightFlag = (uint16_t) (mapHeight == GBA_MAP_SIZE ? 0 : 1);
@@ -41,6 +45,9 @@ void GBAMap::toCode(ostream &headerFile, ostream &codeFile) {
 
     makeArrayDeclaration(headerFile, d_name + TERRAIN_MAP_NAME, d_terrainMap);
     makeArrayDefinition(codeFile, d_name + TERRAIN_MAP_NAME, d_terrainMap);
+
+    makeArrayDeclaration(headerFile, d_name + OBJECTS_NAME, d_objects);
+    makeArrayDefinition(codeFile, d_name + OBJECTS_NAME, d_objects);
 
     for (int index = 0; index < d_tileLayers.size(); index++) {
         auto tileLayer = d_tileLayers[index];

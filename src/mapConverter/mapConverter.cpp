@@ -3,6 +3,7 @@
 #include "tileLayerConverter/tileLayerConverter.hpp"
 #include "../log/logger.hpp"
 #include "../gba/background.h"
+#include "objectLayerConverter/objectLayerConverter.hpp"
 #include <iostream>
 
 GBAMap MapConverter::convert(const string &name, const tmx::Map &tmxMap) {
@@ -28,8 +29,8 @@ GBAMap MapConverter::convert(const string &name, const tmx::Map &tmxMap) {
     unsigned gbaWidth = mapSize.x * tileSize.x / GBA_TILE_SIZE;
     unsigned gbaHeight = mapSize.y * tileSize.y / GBA_TILE_SIZE;
 
-    if (gbaWidth  != GBA_MAP_SIZE && gbaWidth  != GBA_MAP_SIZE * 2 ||
-        gbaHeight != GBA_MAP_SIZE && gbaHeight != GBA_MAP_SIZE * 2) {
+    if ((gbaWidth  != GBA_MAP_SIZE && gbaWidth  != GBA_MAP_SIZE * 2) ||
+        (gbaHeight != GBA_MAP_SIZE && gbaHeight != GBA_MAP_SIZE * 2)) {
         log(ERROR, "The map width and height must be either " + to_string(GBA_MAP_SIZE) +
                    " or " + to_string(GBA_MAP_SIZE * 2) +
                    " tiles large (when subdivided to GBA-sized tiles of "
@@ -78,9 +79,17 @@ GBAMap MapConverter::convert(const string &name, const tmx::Map &tmxMap) {
 
     auto *tileLayerConverter = new TileLayerConverter(tileSet.getFirstGID());
     for (const auto& tileLayer : tileLayers) {
-        log(INFO, "Converting layer '" + tileLayer->getName() + "'.");
+        log(INFO, "Converting tile layer '" + tileLayer->getName() + "'.");
         auto tileLayerBytes = tileLayerConverter->convert(tileLayer, mapSize.x, mapSize.y, tileSize.x);
         gbaMap.addTileLayer(tileLayerBytes);
+    }
+
+    const auto objectLayers = getObjectLayers(layers);
+    auto *objectLayerConverter = new ObjectLayerConverter();
+    for (const auto& objectLayer : objectLayers) {
+        log(INFO, "Converting object layer '" + objectLayer->getName() + "'.");
+        auto objectLayerBytes = objectLayerConverter->convert(objectLayer);
+        gbaMap.addObjects(objectLayerBytes);
     }
 
     return gbaMap;
