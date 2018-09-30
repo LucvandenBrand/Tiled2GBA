@@ -18,8 +18,11 @@ vector<uint16_t> ObjectLayerConverter::convert(const vector<tmx::Object> &object
 vector<uint16_t> ObjectLayerConverter::convert(const tmx::Object &object) {
     vector<uint16_t> bytes;
 
-    auto id = (uint16_t) object.getUID();
-    bytes.push_back(id);
+    uint32_t id = object.getUID();
+    auto higherId = (uint16_t) (id << 16);
+    bytes.push_back(higherId);
+    auto lowerId = (uint16_t) id;
+    bytes.push_back(lowerId);
 
     StringConverter stringConverter;
     vector<uint16_t> nameBytes = stringConverter.convert(object.getName());
