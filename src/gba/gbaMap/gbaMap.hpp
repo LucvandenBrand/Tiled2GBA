@@ -72,7 +72,8 @@ public:
 
 private:
     void makeFlagDefinition(ostream &headerStream, const string &name, uint16_t flag);
-
+    void vectorToCode(ostream &headerStream, ostream &codeStream, const string &name, vector<uint16_t> byteVector);
+    void vectorToCode(ostream &headerStream, ostream &codeStream, const string &name, vector<vector<uint16_t>> byteVectors);
     void makeArrayDeclaration(ostream &headerStream, const string &name, vector<uint16_t> &bytes);
     void makeArrayDefinition(ostream &codeStream, const string &name, vector<uint16_t> &bytes);
 

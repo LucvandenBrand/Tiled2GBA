@@ -36,49 +36,28 @@ void GBAMap::setSize(unsigned mapWidth, unsigned mapHeight) {
 
 void GBAMap::toCode(ostream &headerFile, ostream &codeFile) {
     makeFlagDefinition(headerFile, d_name + SIZE_FLAG_NAME, d_sizeFlag);
-
-    makeArrayDeclaration(headerFile, d_name + PALETTE_NAME, d_palette);
-    makeArrayDefinition(codeFile, d_name + PALETTE_NAME, d_palette);
-
-    makeArrayDeclaration(headerFile, d_name + TILE_SET_NAME, d_tileSet);
-    makeArrayDefinition(codeFile, d_name + TILE_SET_NAME, d_tileSet);
-
-    makeArrayDeclaration(headerFile, d_name + TERRAIN_MAP_NAME, d_terrainMap);
-    makeArrayDefinition(codeFile, d_name + TERRAIN_MAP_NAME, d_terrainMap);
-
-    makeArrayDeclaration(headerFile, d_name + OBJECTS_NAME, d_objects);
-    makeArrayDefinition(codeFile, d_name + OBJECTS_NAME, d_objects);
-
-    for (int index = 0; index < d_tileLayers.size(); index++) {
-        auto tileLayer = d_tileLayers[index];
-        makeArrayDeclaration(headerFile, d_name + TILE_MAP_NAME + to_string(index), tileLayer);
-        makeArrayDefinition(codeFile, d_name + TILE_MAP_NAME + to_string(index), tileLayer);
-    }
-}
-
-void GBAMap::toBinary(ostream &binFile) {
-    unsigned byteCount = 0;
-    writeBinary(binFile, d_sizeFlag, &byteCount);
-    writeBinary(binFile, (uint16_t) d_palette.size(), &byteCount);
-    writeBinary(binFile, d_palette, &byteCount);
-
-    writeBinary(binFile, PADDING_16_BIT, &byteCount);
-    writeBinary(binFile, (uint16_t) d_tileSet.size(), &byteCount);
-    writeBinary(binFile, d_tileSet, &byteCount);
-
-    writeBinary(binFile, PADDING_16_BIT, &byteCount);
-    writeBinary(binFile, (uint16_t) d_terrainMap.size(), &byteCount);
-    writeBinary(binFile, d_terrainMap, &byteCount);
-
-    writeBinary(binFile, (uint16_t) d_tileLayers.size(), &byteCount);
-    if (!d_tileLayers.empty()) {
-        writeBinary(binFile, (uint16_t) d_tileLayers[0].size(), &byteCount);
-        writeBinary(binFile, d_tileLayers, &byteCount);
-    }
+    vectorToCode(headerFile, codeFile, PALETTE_NAME, d_palette);
+    vectorToCode(headerFile, codeFile, TILE_SET_NAME, d_tileSet);
+    vectorToCode(headerFile, codeFile, TERRAIN_MAP_NAME, d_terrainMap);
+    vectorToCode(headerFile, codeFile, OBJECTS_NAME, d_objects);
+    vectorToCode(headerFile, codeFile, TILE_MAP_NAME, d_tileLayers);
 }
 
 void GBAMap::makeFlagDefinition(ostream &headerStream, const string &name, uint16_t flag) {
     headerStream << "#define " << name << " 0x" << setfill('0') << setw(4) << hex << (int) flag << endl << endl;
+}
+
+void GBAMap::vectorToCode(ostream &headerStream, ostream &codeStream, const string &name, vector<uint16_t> byteVector) {
+    makeArrayDeclaration(headerStream, d_name + name, byteVector);
+    makeArrayDefinition(codeStream, d_name + name, byteVector);
+}
+
+void GBAMap::vectorToCode(ostream &headerStream, ostream &codeStream, const string &name, vector<vector<uint16_t>> byteVectors) {
+    for (int index = 0; index < byteVectors.size(); index++) {
+        auto byteVectorName = name + to_string(index);
+        auto byteVector = byteVectors[index];
+        vectorToCode(headerStream, codeStream, byteVectorName, byteVector);
+    }
 }
 
 void GBAMap::makeArrayDeclaration(ostream &headerStream, const string &name, vector<uint16_t> &bytes) {
@@ -105,6 +84,27 @@ void GBAMap::makeArrayDefinition(ostream &codeStream, const string &name, vector
     }
 
     codeStream << endl << "};" << endl << endl;
+}
+
+void GBAMap::toBinary(ostream &binFile) {
+    unsigned byteCount = 0;
+    writeBinary(binFile, d_sizeFlag, &byteCount);
+    writeBinary(binFile, (uint16_t) d_palette.size(), &byteCount);
+    writeBinary(binFile, d_palette, &byteCount);
+
+    writeBinary(binFile, PADDING_16_BIT, &byteCount);
+    writeBinary(binFile, (uint16_t) d_tileSet.size(), &byteCount);
+    writeBinary(binFile, d_tileSet, &byteCount);
+
+    writeBinary(binFile, PADDING_16_BIT, &byteCount);
+    writeBinary(binFile, (uint16_t) d_terrainMap.size(), &byteCount);
+    writeBinary(binFile, d_terrainMap, &byteCount);
+
+    writeBinary(binFile, (uint16_t) d_tileLayers.size(), &byteCount);
+    if (!d_tileLayers.empty()) {
+        writeBinary(binFile, (uint16_t) d_tileLayers[0].size(), &byteCount);
+        writeBinary(binFile, d_tileLayers, &byteCount);
+    }
 }
 
 template<typename T>
