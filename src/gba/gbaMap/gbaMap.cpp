@@ -24,7 +24,7 @@ void GBAMap::setTerrainMap(vector<uint16_t> &bytes) {
 }
 
 void GBAMap::addObjects(vector<uint16_t> &bytes) {
-    d_objects = bytes;
+    d_objects.insert(d_objects.end(), bytes.begin(), bytes.end());
 }
 
 void GBAMap::setSize(unsigned mapWidth, unsigned mapHeight) {

@@ -5,6 +5,7 @@ vector<uint16_t> StringConverter::convert(const string &text) {
     const char* byteArray = text.c_str();
     const char* paddedByteArray = createPaddedByteArray(byteArray);
     auto numBytes = getByteArraySize(paddedByteArray);
+    numBytes += getAlignmentOffset(numBytes);
     vector<uint16_t> bytes;
 
     for (unsigned index = 0; index < numBytes; index += 2) {
