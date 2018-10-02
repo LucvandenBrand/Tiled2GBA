@@ -8,7 +8,7 @@
 using namespace std;
 
 /**
- * Converts Tile Sets to a GBA 256 color palette and GBA Char block.
+ * Converts Tile Sets to a GBA 256 color palette, a GBA Char block and terrain data.
  */
 class TileSetConverter {
 public:
@@ -30,7 +30,14 @@ public:
      */
     vector<uint16_t> getPalette();
 
+    /**
+     * Return the tile-terrain mapping
+     * @return The tile-terrain mapping.
+     */
+    vector<uint16_t> getTerrainMap();
+
 private:
+    Color tmxColourToColor(tmx::Colour colour);
     uint8_t remap(uint8_t byte, uint8_t max, uint8_t newMax);
     uint8_t addColor(Color color);
     void parseSheet(Image image, unsigned tileSize);
@@ -39,6 +46,7 @@ private:
 
     vector<uint16_t> d_tileBytes;
     vector<uint16_t> d_paletteBytes;
+    vector<uint16_t> d_terrainMapBytes;
 };
 
 #endif // TILE_SET_CONVERTER_H

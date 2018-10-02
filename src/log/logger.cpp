@@ -16,13 +16,13 @@ string Logger::levelToString(LogLevel level) {
     string message;
     switch (level) {
         case INFO:
-            message = message + WHITE + "[INFO]";
+            message = message + "[INFO]";
             break;
         case WARN:
-            message = message + YELLOW + "[WARN]";
+            message = message + "[WARN]";
             break;
         case ERROR:
-            message = message + RED + "[ERROR]";
+            message = message + "[ERROR]";
             break;
     }
     return message;
@@ -31,7 +31,7 @@ string Logger::levelToString(LogLevel level) {
 void Logger::log(LogLevel level, const string &message) {
     if (level < d_level)
         return;
-    d_logStream << levelToString(level) << " - " << message << RESET << endl;
+    d_logStream << levelToString(level) << " - " << message << endl;
 }
 
 void Logger::operator() (LogLevel level, const string &message) {

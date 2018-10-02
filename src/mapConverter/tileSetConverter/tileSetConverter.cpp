@@ -5,14 +5,22 @@
 #include "image/image.hpp"
 #include "imageRetiler/imageRetiler.hpp"
 #include "../../gba/background.h"
+#include "terrainConverter/terrainConverter.hpp"
 #include <algorithm>
 
 TileSetConverter::TileSetConverter(const tmx::Tileset &tileSet) {
     auto log = *Logger::getInstance();
+
+    auto tileSize = tileSet.getTileSize().x;
+    TerrainConverter terrainConverter(tileSize);
+    d_terrainMapBytes = terrainConverter.convertTerrainMap(tileSet.getTiles());
+
+    Color transparentColor = tmxColourToColor(tileSet.getTransparencyColour());
+    generateColorTile(transparentColor);
+
     try {
         Image image(tileSet.getImagePath());
-        auto tileSize = tileSet.getTileSize();
-        parseSheet(image, tileSize.x);
+        parseSheet(image, tileSize);
     } catch (runtime_error &error) {
         log(ERROR, error.what());
         exit(EXIT_FAILURE);
@@ -25,6 +33,10 @@ vector<uint16_t> TileSetConverter::getTiles() {
 
 vector<uint16_t> TileSetConverter::getPalette() {
     return d_paletteBytes;
+}
+
+vector<uint16_t> TileSetConverter::getTerrainMap() {
+    return d_terrainMapBytes;
 }
 
 uint8_t TileSetConverter::remap(uint8_t byte, uint8_t max, uint8_t newMax) {
@@ -48,9 +60,16 @@ uint8_t TileSetConverter::addColor(Color color) {
     return (uint8_t) (d_paletteBytes.size() - 1);
 }
 
-void TileSetConverter::parseSheet(Image image, unsigned tileSize) {
-    generateColorTile(BLACK);
+Color TileSetConverter::tmxColourToColor(tmx::Colour colour) {
+    Color color;
+    color.red   = colour.r;
+    color.green = colour.g;
+    color.blue  = colour.b;
+    color.alpha = colour.a;
+    return color;
+}
 
+void TileSetConverter::parseSheet(Image image, unsigned tileSize) {
     ImageRetiler retiler;
     Image retiledImage = retiler.retile(image, tileSize);
 

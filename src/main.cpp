@@ -8,8 +8,8 @@
 #include "log/logger.hpp"
 
 void printHeader() {
-    cout << CYAN << PROGRAM_NAME << " v" << VERSION_MAJOR << '.' << VERSION_MINOR << '.' << VERSION_PATCH
-         << RESET << " by " << GREEN << AUTHOR << RESET << endl;
+    cout << PROGRAM_NAME << " v" << VERSION_MAJOR << '.' << VERSION_MINOR << '.' << VERSION_PATCH
+         << " by " << AUTHOR << endl;
 }
 
 string pathToName(string path) {

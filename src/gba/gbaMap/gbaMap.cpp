@@ -19,6 +19,10 @@ void GBAMap::addTileLayer(vector<uint16_t> &bytes) {
     d_tileLayers.push_back(bytes);
 }
 
+void GBAMap::setTerrainMap(vector<uint16_t> &bytes) {
+    d_terrainMap = bytes;
+}
+
 void GBAMap::setSize(unsigned mapWidth, unsigned mapHeight) {
     auto widthFlag  = (uint16_t) (mapWidth  == GBA_MAP_SIZE ? 0 : 1);
     auto heightFlag = (uint16_t) (mapHeight == GBA_MAP_SIZE ? 0 : 1);
@@ -28,11 +32,15 @@ void GBAMap::setSize(unsigned mapWidth, unsigned mapHeight) {
 
 void GBAMap::toCode(ostream &headerFile, ostream &codeFile) {
     makeFlagDefinition(headerFile, d_name + SIZE_FLAG_NAME, d_sizeFlag);
+
     makeArrayDeclaration(headerFile, d_name + PALETTE_NAME, d_palette);
     makeArrayDefinition(codeFile, d_name + PALETTE_NAME, d_palette);
 
     makeArrayDeclaration(headerFile, d_name + TILE_SET_NAME, d_tileSet);
     makeArrayDefinition(codeFile, d_name + TILE_SET_NAME, d_tileSet);
+
+    makeArrayDeclaration(headerFile, d_name + TERRAIN_MAP_NAME, d_terrainMap);
+    makeArrayDefinition(codeFile, d_name + TERRAIN_MAP_NAME, d_terrainMap);
 
     for (int index = 0; index < d_tileLayers.size(); index++) {
         auto tileLayer = d_tileLayers[index];
@@ -44,16 +52,20 @@ void GBAMap::toCode(ostream &headerFile, ostream &codeFile) {
 void GBAMap::toBinary(ostream &binFile) {
     unsigned byteCount = 0;
     writeBinary(binFile, d_sizeFlag, &byteCount);
-    writeBinary(binFile, (u_int16_t) d_palette.size(), &byteCount);
+    writeBinary(binFile, (uint16_t) d_palette.size(), &byteCount);
     writeBinary(binFile, d_palette, &byteCount);
 
     writeBinary(binFile, PADDING_16_BIT, &byteCount);
-    writeBinary(binFile, (u_int16_t) d_tileSet.size(), &byteCount);
+    writeBinary(binFile, (uint16_t) d_tileSet.size(), &byteCount);
     writeBinary(binFile, d_tileSet, &byteCount);
 
-    writeBinary(binFile, (u_int16_t) d_tileLayers.size(), &byteCount);
+    writeBinary(binFile, PADDING_16_BIT, &byteCount);
+    writeBinary(binFile, (uint16_t) d_terrainMap.size(), &byteCount);
+    writeBinary(binFile, d_terrainMap, &byteCount);
+
+    writeBinary(binFile, (uint16_t) d_tileLayers.size(), &byteCount);
     if (!d_tileLayers.empty()) {
-        writeBinary(binFile, (u_int16_t) d_tileLayers[0].size(), &byteCount);
+        writeBinary(binFile, (uint16_t) d_tileLayers[0].size(), &byteCount);
         writeBinary(binFile, d_tileLayers, &byteCount);
     }
 }
