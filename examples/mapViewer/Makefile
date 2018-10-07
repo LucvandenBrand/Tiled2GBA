@@ -1,37 +1,14 @@
 PATH := $(DEVKITARM)/bin:$(PATH)
 
-# --- Project details -------------------------------------------------
+#  Project settings
 
-PROJ    := mapViewer
-TITLE   := $(PROJ)
+NAME := mapViewer
+SOURCE_DIR := source/
+SPECS := -specs=gba.specs
 
-GAMEOBJS   := main.o map/loadMap.o map/loadMapFromCode.o map/loadMapFromROM.o map/setMapOnScreen.o map/object/loadObject.o map/object/loadObjectID.o map/object/loadString.o map/object/popValue.o shiftMap.o shiftMapLayer.o
-ASSETSOBJS := map.o
-LIBOBJS    := gbfs/libgbfs.o
+MAP := map
 
-GAMEOBJS   := $(addprefix source/mapViewer/,$(GAMEOBJS))
-ASSETSOBJS := $(addprefix source/asset/,$(ASSETSOBJS))
-LIBOBJS    := $(addprefix source/gbaLib/,$(LIBOBJS))
-
-OBJS	:= $(GAMEOBJS) $(ASSETSOBJS) $(LIBOBJS)
-
-# --- boot type (MB=0 : normal. MB=1 : multiboot) ---
-
-MB = 0
-
-ifeq ($(MB),1)
-
-TARGET	:= $(PROJ).mb
-SPECS	:= -specs=gba_mb.specs
-
-else
-
-TARGET	:= $(PROJ)
-SPECS	:= -specs=gba.specs
-
-endif
-
-# --- Compiling -------------------------------------------------------
+# Compilation settings
 
 CROSS	?= arm-none-eabi-
 AS		:= $(CROSS)as
@@ -47,29 +24,29 @@ LDFLAGS	:= $(ARCH) $(SPECS)
 
 .PHONY : build clean
 
-# --- Build -----------------------------------------------------------
+# Build commands
 
-build : $(TARGET).gba
+SOURCES := $(shell find $(SOURCE_DIR) -name '*.c')
+OBJECTS := $(SOURCES:%.c=%.o)
 
-play: build
-	vba $(TARGET).gba
+build : $(NAME).gba
 
-append: $(TARGET).gba
-	./gbfs/gbfs map.gbfs map.bin
+append: $(NAME).gba
+	./gbfs/gbfs $(MAP).gbfs $(MAP).bin
 	./gbfs/padbin 256 $<
-	cat $< map.gbfs > $(TARGET)_append.gba
+	cat $< $(MAP).gbfs > $(NAME)_append.gba
 
-$(TARGET).gba : $(TARGET).elf
+$(NAME).gba : $(NAME).elf
 	$(OBJCOPY) -v -O binary $< $@
-	-@gbafix $@ -t$(TITLE)
+	-@gbafix $@ -t$(NAME)
 
-$(TARGET).elf : $(OBJS)
+$(NAME).elf : $(OBJECTS)
 	$(LD) $^ $(LDFLAGS) -o $@
 
-$(OBJS) : %.o : %.c
+$(OBJECTS) : %.o : %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# --- Clean -----------------------------------------------------------
+# Cleanup settings
 
 clean :
 	@rm -fv *.gba
