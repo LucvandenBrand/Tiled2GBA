@@ -4,7 +4,7 @@ Simple CLI for converting [Tiled](https://www.mapeditor.org) maps to data the **
 Special thanks to [Jasper Vijn](https://www.coranac.com) for providing a great tutorial on GBA development!
 
 ## Releases
-You can download binary releases for Linux [here](https://github.com/LucvandenBrand/Tiled2GBA/releases).
+You can download binary releases [here](https://github.com/LucvandenBrand/Tiled2GBA/releases).
 
 ## Usage
 Tiled2GBA can generate both compilable C code and appendable binary data. 
