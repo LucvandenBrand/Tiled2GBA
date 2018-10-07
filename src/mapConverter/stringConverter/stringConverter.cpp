@@ -9,8 +9,8 @@ vector<uint16_t> StringConverter::convert(const string &text) {
     mergedStringBytes.push_back((uint16_t) (numStringBytes/2));
 
     for (unsigned index = 0; index < numStringBytes; index += 2) {
-        auto firstChar = (uint16_t) (stringBytes[index] << 8 & 0xFF00);
-        auto secondChar = (uint16_t) (stringBytes[index+1] & 0x00FF);
+        auto firstChar = (uint16_t) (stringBytes[index+1] << 8 & 0xFF00);
+        auto secondChar = (uint16_t) (stringBytes[index] & 0x00FF);
         uint16_t mergedChar = firstChar | secondChar;
         mergedStringBytes.push_back(mergedChar);
     }

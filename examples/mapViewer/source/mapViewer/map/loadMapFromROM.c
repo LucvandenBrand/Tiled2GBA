@@ -1,4 +1,5 @@
 #include "map.h"
+#include <string.h>
 
 Map loadMapFromROM(const u16 *mapData) {
     Map map;
