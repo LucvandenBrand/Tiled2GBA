@@ -3,6 +3,7 @@
 #include "tileLayerConverter/tileLayerConverter.hpp"
 #include "../log/logger.hpp"
 #include "../gba/background.h"
+#include "objectLayerConverter/objectLayerConverter.hpp"
 #include <iostream>
 
 GBAMap MapConverter::convert(const string &name, const tmx::Map &tmxMap) {
@@ -28,8 +29,8 @@ GBAMap MapConverter::convert(const string &name, const tmx::Map &tmxMap) {
     unsigned gbaWidth = mapSize.x * tileSize.x / GBA_TILE_SIZE;
     unsigned gbaHeight = mapSize.y * tileSize.y / GBA_TILE_SIZE;
 
-    if (gbaWidth  != GBA_MAP_SIZE && gbaWidth  != GBA_MAP_SIZE * 2 ||
-        gbaHeight != GBA_MAP_SIZE && gbaHeight != GBA_MAP_SIZE * 2) {
+    if ((gbaWidth  != GBA_MAP_SIZE && gbaWidth  != GBA_MAP_SIZE * 2) ||
+        (gbaHeight != GBA_MAP_SIZE && gbaHeight != GBA_MAP_SIZE * 2)) {
         log(ERROR, "The map width and height must be either " + to_string(GBA_MAP_SIZE) +
                    " or " + to_string(GBA_MAP_SIZE * 2) +
                    " tiles large (when subdivided to GBA-sized tiles of "
@@ -69,22 +70,53 @@ GBAMap MapConverter::convert(const string &name, const tmx::Map &tmxMap) {
     gbaMap.setTerrainMap(terrainMap);
 
     const auto& layers = tmxMap.getLayers();
-    if (layers.size() > GBA_LAYERS) {
-        log(WARN, "This map has " + to_string(layers.size())
-                  + " layers, which is " + to_string(layers.size() - GBA_LAYERS)
+    const auto tileLayers = getTileLayers(layers);
+    if (tileLayers.size() > GBA_LAYERS) {
+        log(WARN, "This map has " + to_string(tileLayers.size())
+                  + "tile layers, which is " + to_string(tileLayers.size() - GBA_LAYERS)
                   + " more than than the GBA has natively.");
     }
 
     auto *tileLayerConverter = new TileLayerConverter(tileSet.getFirstGID());
-    for (const auto& layer : layers) {
-        if (layer->getType() != tmx::Layer::Type::Tile)
-            continue;
-
-        log(INFO, "Converting layer '" + layer->getName() + "'.");
-        const auto tileLayer = dynamic_cast<const tmx::TileLayer*>(layer.get());
+    for (const auto& tileLayer : tileLayers) {
+        log(INFO, "Converting tile layer '" + tileLayer->getName() + "'.");
         auto tileLayerBytes = tileLayerConverter->convert(tileLayer, mapSize.x, mapSize.y, tileSize.x);
         gbaMap.addTileLayer(tileLayerBytes);
     }
 
+    const auto objectLayers = getObjectLayers(layers);
+    auto *objectLayerConverter = new ObjectLayerConverter();
+    for (const auto& objectLayer : objectLayers) {
+        log(INFO, "Converting object layer '" + objectLayer->getName() + "'.");
+        auto objectLayerBytes = objectLayerConverter->convert(objectLayer);
+        gbaMap.addObjects(objectLayerBytes);
+    }
+
     return gbaMap;
+}
+
+vector<const tmx::TileLayer*> MapConverter::getTileLayers(const vector<tmx::Layer::Ptr> &layers) {
+    vector<const tmx::TileLayer*> tileLayers;
+
+    for (const auto& layer : layers) {
+        if (layer->getType() != tmx::Layer::Type::Tile)
+            continue;
+        const auto tileLayer = dynamic_cast<const tmx::TileLayer*>(layer.get());
+        tileLayers.push_back(tileLayer);
+    }
+
+    return tileLayers;
+}
+
+vector<const tmx::ObjectGroup*> MapConverter::getObjectLayers(const vector<tmx::Layer::Ptr> &layers) {
+    vector<const tmx::ObjectGroup*> objectLayers;
+
+    for (const auto& layer : layers) {
+        if (layer->getType() != tmx::Layer::Type::Object)
+            continue;
+        const auto tileLayer = dynamic_cast<const tmx::ObjectGroup*>(layer.get());
+        objectLayers.push_back(tileLayer);
+    }
+
+    return objectLayers;
 }

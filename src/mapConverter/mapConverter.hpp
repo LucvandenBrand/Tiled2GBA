@@ -3,6 +3,7 @@
 
 #include "../lib/tmxlite/Map.hpp"
 #include "../gba/gbaMap/gbaMap.hpp"
+#include "../lib/tmxlite/TileLayer.hpp"
 
 using namespace std;
 
@@ -17,6 +18,10 @@ public:
      * @return The GBA Map.
      */
     GBAMap convert(const string &name, const tmx::Map &tmxMap);
+
+private:
+    vector<const tmx::TileLayer*> getTileLayers(const vector<tmx::Layer::Ptr> &layers);
+    vector<const tmx::ObjectGroup*> getObjectLayers(const vector<tmx::Layer::Ptr> &layers);
 };
 
 #endif // MAP_CONVERTER_H
