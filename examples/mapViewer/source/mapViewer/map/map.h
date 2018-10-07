@@ -2,18 +2,22 @@
 #define MAP_H
 
 #include "../../gbaLib/types.h"
+#include "object/object.h"
 
 typedef struct {
     u16 sizeFlag,
         paletteLength,
         tileSetLength,
         terrainMapLength,
+        numObjects,
         numLayers,
         tileMapLength;
 
     const u16 *palette,
               *tileSet,
               *terrainMap;
+
+    Object objects[256];
 
     const u16 *tileMapLayers[3];
 } Map;

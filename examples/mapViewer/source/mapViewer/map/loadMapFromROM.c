@@ -2,7 +2,7 @@
 
 Map loadMapFromROM(const u16 *mapData) {
     Map map;
-    u32 index = 0;
+    u16 index = 0;
 
     map.sizeFlag = mapData[index++];
 
@@ -26,6 +26,16 @@ Map loadMapFromROM(const u16 *mapData) {
         map.tileMapLayers[layerIndex] = &mapData[index];
         index += map.tileMapLength;
     }
+
+    u16 lengthObjectData = mapData[index++];
+    u32 endObjectData = index + lengthObjectData;
+    u32 objectCount = 0;
+    while (index != endObjectData) {
+        Object object = loadObject(mapData, &index);
+        map.objects[objectCount] = object;
+        objectCount++;
+    }
+    map.numObjects = objectCount;
 
     return map;
 }

@@ -20,9 +20,9 @@ public:
     vector<uint16_t> convert(const string &text);
 
 private:
-    const char* createPaddedByteArray(const char* byteArray);
-    unsigned getByteArraySize(const char* byteArray);
-    unsigned getAlignmentOffset(unsigned size);
+    vector<uint8_t> stringToByteVector(const string &text);
+    void paddByteVector(vector<uint8_t> &byteVector);
+    unsigned getAlignmentOffset(unsigned long size);
 };
 
 #endif

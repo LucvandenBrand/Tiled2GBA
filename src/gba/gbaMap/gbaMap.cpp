@@ -105,6 +105,9 @@ void GBAMap::toBinary(ostream &binFile) {
         writeBinary(binFile, (uint16_t) d_tileLayers[0].size(), &byteCount);
         writeBinary(binFile, d_tileLayers, &byteCount);
     }
+
+    writeBinary(binFile, (uint16_t) d_objects.size(), &byteCount);
+    writeBinary(binFile, d_objects, &byteCount);
 }
 
 template<typename T>
