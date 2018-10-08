@@ -3,9 +3,14 @@
 
 #include "../../../gbaLib/types.h"
 
+typedef struct {
+    u16 x, y;
+} ALIGN(4) ObjectPoint;
+
 typedef struct
 {
     u32 id;
+    ObjectPoint position;
     const char* name;
     const char* type;
 } Object;
