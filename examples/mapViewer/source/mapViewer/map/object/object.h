@@ -17,6 +17,7 @@ typedef struct
 
 Object loadObject(const u16* objectData, u16* index);
 u32 loadObjectID(const u16* idData, u16* index);
+ObjectPoint loadPosition(const u16* positionData, u16* index);
 const char* loadString(const u16* stringData, u16* index);
 u16 popValue(const u16* data, u16* index);
 
