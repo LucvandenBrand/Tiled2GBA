@@ -1,4 +1,4 @@
-#include "../gbaLib/video/background.h"
+#include "map.h"
 
 void shiftMapLayer(u16 layer, BGPoint offset)
 {

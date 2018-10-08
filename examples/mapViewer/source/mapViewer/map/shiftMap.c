@@ -1,4 +1,4 @@
-#include "mapViewer.h"
+#include "map.h"
 
 void shiftMap(Map map, BGPoint offset)
 {

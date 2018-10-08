@@ -1,6 +1,8 @@
 #ifndef INPUT_H
 #define INPUT_H
 
+#include "../memoryMap.h"
+
 /**
  * Defines user input access.
  **/
