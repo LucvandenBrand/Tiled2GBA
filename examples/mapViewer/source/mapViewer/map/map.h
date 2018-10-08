@@ -2,6 +2,7 @@
 #define MAP_H
 
 #include "../../gbaLib/types.h"
+#include "../../gbaLib/video/background.h"
 #include "object/object.h"
 
 typedef struct {
@@ -32,5 +33,7 @@ Map loadMapFromROM(const u16 *mapData);
 Map loadMapFromCode();
 
 void setMapOnScreen(Map map);
+void shiftMap(Map map, BGPoint offset);
+void shiftMapLayer(u16 layer, BGPoint offset);
 
 #endif

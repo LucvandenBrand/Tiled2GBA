@@ -24,6 +24,11 @@ vector<uint16_t> ObjectLayerConverter::convert(const tmx::Object &object) {
     auto lowerId = (uint16_t) id;
     bytes.push_back(lowerId);
 
+    auto xPosition = (uint16_t) object.getPosition().x;
+    bytes.push_back(xPosition);
+    auto yPosition = (uint16_t) object.getPosition().y;
+    bytes.push_back(yPosition);
+
     StringConverter stringConverter;
     vector<uint16_t> nameBytes = stringConverter.convert(object.getName());
     bytes.insert(bytes.end(), nameBytes.begin(), nameBytes.end());

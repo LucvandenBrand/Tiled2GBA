@@ -1,7 +1,6 @@
 #include "../gbaLib/types.h"
-#include "mapViewer.h"
-#include "map/map.h"
 #include "../gbaLib/input/input.h"
+#include "map/map.h"
 
 int main()
 {

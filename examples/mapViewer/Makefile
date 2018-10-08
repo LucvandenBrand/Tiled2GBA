@@ -52,6 +52,6 @@ clean :
 	@rm -fv *.gba
 	@rm -fv *.elf
 	@rm -fv *.gbfs
-	@rm -rf $(OBJS)
+	@rm -rf $(OBJECTS)
 
 #EOF
