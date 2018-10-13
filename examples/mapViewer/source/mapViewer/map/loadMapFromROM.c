@@ -32,7 +32,7 @@ Map loadMapFromROM(const u16 *mapData) {
     u32 endObjectData = index + lengthObjectData;
     u32 objectCount = 0;
     while (index != endObjectData) {
-        Object object = loadObject(mapData, &index);
+        MapObject object = loadObject(mapData, &index);
         map.objects[objectCount] = object;
         objectCount++;
     }

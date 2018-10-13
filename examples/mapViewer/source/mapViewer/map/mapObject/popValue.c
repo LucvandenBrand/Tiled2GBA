@@ -1,4 +1,4 @@
-#include "object.h"
+#include "mapObject.h"
 
 u16 popValue(const u16* data, u16* index) {
     u16 value = data[*index];

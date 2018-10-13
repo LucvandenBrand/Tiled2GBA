@@ -19,7 +19,7 @@ Map loadMapFromCode() {
     u16 objectDataIndex = 0;
     u32 objectCount = 0;
     while (objectDataIndex != mapObjectsLength) {
-        Object object = loadObject(mapObjects, &objectDataIndex);
+        MapObject object = loadObject(mapObjects, &objectDataIndex);
         map.objects[objectCount] = object;
         objectCount++;
     }

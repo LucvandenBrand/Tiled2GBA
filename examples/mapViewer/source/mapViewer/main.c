@@ -1,7 +1,4 @@
-#include "../gbaLib/types.h"
-#include "../gbaLib/input/input.h"
-#include "map/map.h"
-#include "sprite/sprite.h"
+#include "main.h"
 
 int main()
 {
@@ -11,29 +8,24 @@ int main()
     loadSpriteSheet();
     SpriteObject spriteObjects[128];
     initializeSpriteObjectMemory(spriteObjects, 128);
+    showMapObjects(&map, spriteObjects);
     setSpritesOnScreen();
 
-    mapObjectsToSpriteObjects(map.objects, spriteObjects, map.numObjects);
-    copySpriteObjectsToMemory(spriteObjects, map.numObjects);
-
     const int SHIFT_SPEED = 2;
-    BGPoint shift = {0, 0};
+    BackgroundPoint backgroundShift = {0, 0};
     while (TRUE)
     {
         videoSync();
 
         KeyState inputState = getInputState();
-        shift.y += getYAxis(inputState) * SHIFT_SPEED;
-        shift.x += getXAxis(inputState) * SHIFT_SPEED;
+        backgroundShift.y += getYAxis(inputState) * SHIFT_SPEED;
+        backgroundShift.x += getXAxis(inputState) * SHIFT_SPEED;
+        shiftMap(map, backgroundShift);
 
-        shiftMap(map, shift);
-
-        ObjectPoint objectShift;
-        objectShift.x = - getXAxis(inputState) * SHIFT_SPEED;
-        objectShift.y = - getYAxis(inputState) * SHIFT_SPEED;
-
+        ObjectPoint objectShift = {0, 0};
+        objectShift.x = getXAxis(inputState) * SHIFT_SPEED;
+        objectShift.y = getYAxis(inputState) * SHIFT_SPEED;
         shiftMapObjects(map.objects, objectShift, map.numObjects);
-        mapObjectsToSpriteObjects(map.objects, spriteObjects, map.numObjects);
-        copySpriteObjectsToMemory(spriteObjects, map.numObjects);
+        showMapObjects(&map, spriteObjects);
     }
 }

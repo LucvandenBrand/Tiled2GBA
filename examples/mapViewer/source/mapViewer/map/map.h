@@ -3,7 +3,7 @@
 
 #include "../../gbaLib/types.h"
 #include "../../gbaLib/video/background.h"
-#include "object/object.h"
+#include "mapObject/mapObject.h"
 
 typedef struct {
     u16 sizeFlag,
@@ -18,7 +18,7 @@ typedef struct {
               *tileSet,
               *terrainMap;
 
-    Object objects[256];
+    MapObject objects[256];
 
     const u16 *tileMapLayers[3];
 } Map;
@@ -33,7 +33,7 @@ Map loadMapFromROM(const u16 *mapData);
 Map loadMapFromCode();
 
 void setMapOnScreen(Map map);
-void shiftMap(Map map, BGPoint offset);
-void shiftMapLayer(u16 layer, BGPoint offset);
+void shiftMap(Map map, BackgroundPoint offset);
+void shiftMapLayer(u16 layer, BackgroundPoint offset);
 
 #endif

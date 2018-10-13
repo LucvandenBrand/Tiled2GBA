@@ -1,6 +1,6 @@
-#include "object.h"
+#include "mapObject.h"
 
-void shiftMapObjects(Object* objects, ObjectPoint shift, u32 count)
+void shiftMapObjects(MapObject* objects, ObjectPoint shift, u32 count)
 {
     for (u32 index = 0; index < count; index++)
     {

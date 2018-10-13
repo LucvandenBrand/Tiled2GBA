@@ -1,4 +1,4 @@
-#include "object.h"
+#include "mapObject.h"
 
 const char* loadString(const u16* stringData, u16* index) {
     u16 length = popValue(stringData, index);

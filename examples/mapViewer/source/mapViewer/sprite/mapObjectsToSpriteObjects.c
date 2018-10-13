@@ -1,6 +1,6 @@
 #include "sprite.h"
 
-void mapObjectsToSpriteObjects(Object* mapObjects, SpriteObject* spriteObjects, u32 count)
+void mapObjectsToSpriteObjects(MapObject* mapObjects, SpriteObject* spriteObjects, u32 count)
 {
     for (u32 index = 0; index < count; index++)
     {
