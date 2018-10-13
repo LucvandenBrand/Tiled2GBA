@@ -4,7 +4,7 @@
 #include "video.h"
 
 /**
- *  Defines the background control.
+ * Defines the background control.
  */
 
 typedef u16 ScreenEntry;
@@ -21,6 +21,8 @@ typedef ScreenEntry ScreenBlock[1024];
 typedef Tile CharBlock[512];
 
 #define MEMORY_BACKGROUND_PALETTE ((Color*)MEMORY_PALETTE)
+#define MEMORY_BACKGROUND_PALETTE_SIZE 0x00200
+
 #define MEMORY_SCREEN_BLOCK       ((ScreenBlock*)MEMORY_VIDEORAM)
 #define MEMORY_CHAR_BLOCK         ((CharBlock*)MEMORY_VIDEORAM)
 

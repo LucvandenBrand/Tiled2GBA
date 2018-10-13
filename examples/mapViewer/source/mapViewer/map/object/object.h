@@ -21,4 +21,6 @@ ObjectPoint loadPosition(const u16* positionData, u16* index);
 const char* loadString(const u16* stringData, u16* index);
 u16 popValue(const u16* data, u16* index);
 
+void shiftMapObjects(Object* objects, ObjectPoint shift, u32 count);
+
 #endif
