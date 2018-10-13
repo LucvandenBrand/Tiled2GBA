@@ -32,6 +32,6 @@
     <property name="numSpawn" type="int" value="1"/>
    </properties>
   </object>
-  <object id="5" name="BlockObject" type="Floaty" gid="1" x="125.5" y="144.112" width="16" height="16"/>
+  <object id="5" name="BlockObject" type="Floaty" gid="1" x="144.028" y="96.0653" width="16" height="16"/>
  </objectgroup>
 </map>

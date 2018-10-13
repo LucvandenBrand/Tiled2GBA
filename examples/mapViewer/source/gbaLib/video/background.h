@@ -4,7 +4,7 @@
 #include "video.h"
 
 /**
- *  Defines the background control.
+ * Defines the background control.
  */
 
 typedef u16 ScreenEntry;
@@ -15,17 +15,19 @@ typedef struct {
 
 typedef struct {
     s16 x, y;
-} ALIGN(4) BGPoint;
+} ALIGN(4) BackgroundPoint;
 
 typedef ScreenEntry ScreenBlock[1024];
 typedef Tile CharBlock[512];
 
 #define MEMORY_BACKGROUND_PALETTE ((Color*)MEMORY_PALETTE)
+#define MEMORY_BACKGROUND_PALETTE_SIZE 0x00200
+
 #define MEMORY_SCREEN_BLOCK       ((ScreenBlock*)MEMORY_VIDEORAM)
 #define MEMORY_CHAR_BLOCK         ((CharBlock*)MEMORY_VIDEORAM)
 
 #define REGISTER_BACKGROUND_CONTROL ((vu16*)(REGISTER_BASE+0x0008))
-#define REGISTER_BACKGROUND_OFFSET  ((BGPoint*)(REGISTER_BASE+0x0010))
+#define REGISTER_BACKGROUND_OFFSET  ((BackgroundPoint*)(REGISTER_BASE+0x0010))
 
 #define FLAG_BACKGROUND_4BPP		  0
 #define FLAG_BACKGROUND_8BPP          0x0080

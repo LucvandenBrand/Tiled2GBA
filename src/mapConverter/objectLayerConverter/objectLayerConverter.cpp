@@ -24,9 +24,14 @@ vector<uint16_t> ObjectLayerConverter::convert(const tmx::Object &object) {
     auto lowerId = (uint16_t) id;
     bytes.push_back(lowerId);
 
-    auto xPosition = (uint16_t) object.getPosition().x;
+    auto halfWidth = (int16_t) (object.getAABB().width / 2);
+    auto halfHeight = (int16_t) (object.getAABB().height / 2);
+    if (object.getTileID() > 0)
+        halfHeight *= -1;
+
+    auto xPosition = (uint16_t) object.getPosition().x + halfWidth;
     bytes.push_back(xPosition);
-    auto yPosition = (uint16_t) object.getPosition().y;
+    auto yPosition = (uint16_t) object.getPosition().y + halfHeight;
     bytes.push_back(yPosition);
 
     StringConverter stringConverter;

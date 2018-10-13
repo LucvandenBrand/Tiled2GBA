@@ -1,4 +1,4 @@
-#include "object.h"
+#include "mapObject.h"
 
 ObjectPoint loadPosition(const u16* positionData, u16* index) {
     ObjectPoint position;

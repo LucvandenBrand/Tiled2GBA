@@ -1,4 +1,4 @@
-#include "object.h"
+#include "mapObject.h"
 
 u32 loadObjectID(const u16* idData, u16* index) {
     u32 upperID = popValue(idData, index);
