@@ -3,5 +3,5 @@
 #define spritePaletteLength 256
 extern const unsigned short spritePalette[256];
 
-#define spriteTileSetLength 544
-extern const unsigned short spriteTileSet[544];
+#define spriteTileSetLength 64
+extern const unsigned int spriteTileSet[32];

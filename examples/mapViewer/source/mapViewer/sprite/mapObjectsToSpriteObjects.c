@@ -9,7 +9,7 @@ void mapObjectsToSpriteObjects(Object* mapObjects, SpriteObject* spriteObjects, 
         SpriteObject *spriteObject= &spriteObjects[index];
         setSpriteObjectAttributes(spriteObject,
                                   ATTRIBUTE0_SQUARE,
-                                  ATTRIBUTE1_SIZE_64,
+                                  ATTRIBUTE1_SIZE_16,
                                   ATTRIBUTE2_PALETTE_BANK(paletteBank) | tileID);
 
         ObjectPoint position = mapObjects[index].position;
