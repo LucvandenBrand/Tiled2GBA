@@ -1,9 +1,17 @@
 cmake_minimum_required(VERSION 3.9)
 project(Tiled2GBA)
 
-# Source location.
-file(GLOB_RECURSE SOURCES src/*.c src/*.cpp src/*.h src/*.hpp src/*.inl)
-
 # Compilation settings.
 set(CMAKE_CXX_STANDARD 17)
-add_executable(${PROJECT_NAME} ${SOURCES})
+
+# Build Tiled2GBA
+file(GLOB_RECURSE PROJECT_SOURCES src/*.c src/*.cpp src/*.h src/*.hpp src/*.inl)
+add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
+add_dependencies(${PROJECT_NAME} gbfs padbin)
+
+# Build additional tools.
+file(GLOB_RECURSE GBFS_SOURCES tools/gbfs/*.c tools/gbfs/*.h)
+add_executable(gbfs ${GBFS_SOURCES})
+
+file(GLOB_RECURSE PADBIN_SOURCES tools/padbin/*.c tools/padbin/*.h)
+add_executable(padbin ${PADBIN_SOURCES})

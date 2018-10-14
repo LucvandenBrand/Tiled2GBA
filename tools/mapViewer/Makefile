@@ -32,8 +32,8 @@ OBJECTS := $(SOURCES:%.c=%.o)
 build : $(NAME).gba
 
 append: $(NAME).gba
-	./gbfs/gbfs $(MAP).gbfs $(MAP).bin
-	./gbfs/padbin 256 $<
+	../gbfs $(MAP).gbfs $(MAP).bin
+	../padbin 256 $<
 	cat $< $(MAP).gbfs > $(NAME)_append.gba
 
 $(NAME).gba : $(NAME).elf
