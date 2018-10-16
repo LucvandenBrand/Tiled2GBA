@@ -3,10 +3,8 @@ PATH := $(DEVKITARM)/bin:$(PATH)
 #  Project settings
 
 NAME := mapViewer
-SOURCE_DIR := source/
+SOURCE_DIR := src/
 SPECS := -specs=gba.specs
-
-MAP := map
 
 # Compilation settings
 
@@ -30,11 +28,6 @@ SOURCES := $(shell find $(SOURCE_DIR) -name '*.c')
 OBJECTS := $(SOURCES:%.c=%.o)
 
 build : $(NAME).gba
-
-append: $(NAME).gba
-	./gbfs/gbfs $(MAP).gbfs $(MAP).bin
-	./gbfs/padbin 256 $<
-	cat $< $(MAP).gbfs > $(NAME)_append.gba
 
 $(NAME).gba : $(NAME).elf
 	$(OBJCOPY) -v -O binary $< $@
