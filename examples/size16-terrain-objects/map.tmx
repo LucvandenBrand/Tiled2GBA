@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="16" height="16" tilewidth="16" tileheight="16" nextobjectid="18">
+ <tileset firstgid="1" source="untitled.tsx"/>
+ <objectgroup name="MoreGameObjects">
+  <object id="16" name="HiddenCircle" type="Secret" x="96.4075" y="52.1291" width="56.8396" height="54.9554">
+   <ellipse/>
+  </object>
+ </objectgroup>
+ <layer name="Tile Layer 1" width="16" height="16">
+  <data encoding="csv">
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+1,3,3,3,3,3,3,3,3,3,3,3,3,3,3,1,
+1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,
+1,2,2,4,2,1,2,2,2,2,2,2,2,2,2,1,
+1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,1,
+1,3,3,3,3,3,2,2,2,1,1,2,2,2,2,1,
+1,2,2,2,2,2,2,2,2,1,1,2,2,2,2,1,
+3,2,2,2,2,2,2,2,2,3,3,2,2,2,2,3,
+2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+2,2,2,2,2,2,2,2,2,1,2,2,2,2,2,2,
+1,2,2,2,2,2,2,2,1,1,1,2,2,2,2,1,
+1,1,1,1,2,2,2,2,3,1,3,2,2,2,2,1,
+1,3,3,3,2,2,2,2,2,3,2,2,2,2,2,1,
+1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+</data>
+ </layer>
+ <objectgroup name="GameObjects">
+  <object id="4" name="Ball Spawn" type="Red" x="56.5923" y="137.853" width="45.8543" height="39.4695">
+   <properties>
+    <property name="numSpawn" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="5" name="BlockObject" type="Floaty" gid="1" x="144.028" y="96.0653" width="16" height="16"/>
+ </objectgroup>
+</map>
