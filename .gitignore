@@ -13,7 +13,7 @@ cmake-build-debug
 .idea
 
 # Compiled binary
-TetrisWithPressure
+build
 
 # Prerequisites
 *.d
