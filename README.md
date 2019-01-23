@@ -9,7 +9,7 @@ You can download binary releases [here](https://github.com/LucvandenBrand/Tiled2
 ## Usage
 Tiled2GBA can generate both compilable C code and appendable binary data. 
 The latter is recommended (no need to recompile your project for changes in assets), 
-and can be used with [GBFS](http://www.pineight.com/gba/#gbfs) in order to access it (see the `tools` folder).
+and can be used with [GBFS](http://www.pineight.com/gba/#gbfs) in order to access it.
 
 ### Generating C code
 Simply call `Tiled2GBA` from your command prompt, and provide a `map.tmx` and `map.c map.h` as
@@ -26,8 +26,10 @@ into the `assets` folder.
 You can use the `--help` command for more information.
 
 ## Development
-This project is written in C++ and contains a very simple [CMake](https://cmake.org/) file to help you compile it.
-Without an IDE like CLion (greatly recommended!) you can build this project by calling:
+This project is divided in two subfolders: `converter` for converting Tiled files, and `player` for playing the converted maps on the GBA.
+
+### Converter
+The converter comes with a handy `CMake` file. Building the converter is done by going into the `converter` folder and executing the following commands:
 
 1. `mkdir build`
 2. `cd build`
@@ -35,6 +37,14 @@ Without an IDE like CLion (greatly recommended!) you can build this project by c
 4. `make`
 
 This should result in a cute little `Tiled2GBA` binary.
+
+### Player
+The player contains a `gbaMap` library in its `lib` folder, **which you can use for your own gba projects**. Both the player as the library come with a handy `make` file. Builing the player and its libraries is done by going into the `player` folder and executing **one** of the two commands:
+
+- `make no-content` to make the player without any map data.
+- `make` to make the player with map data in the `data` folder appended.
+
+You should have a GBA rom now.
 
 ### Contributing
 Contributions are always welcome! You can make a contribution by:
@@ -47,6 +57,5 @@ The **develop** branch is meant for in-development unstable releases,
 whilst the **master** branch is meant for stable production-ready releases.
 
 ### Licence
-All source files are protected under the MIT Licence, except for the included libraries in `src/lib`, 
-`tools/gbfs` and `tools/padbin`. The used libraries are open-source, but please read their included licenses for 
+All source files are protected under the MIT Licence, except for the included external libraries. The used libraries are open-source, but please read their included licenses for
 their specific terms and conditions.
