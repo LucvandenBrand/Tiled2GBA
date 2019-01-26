@@ -13,7 +13,7 @@ void setMapOnScreen(Map map) {
         u32 screenBlockIndex = NUM_SCREEN_BLOCKS - screenBlockStep * (layerIndex + 1);
         memcpy(&MEMORY_SCREEN_BLOCK[screenBlockIndex][0], map.tileMapLayers[layerIndex], map.tileMapLength * 2);
 
-        REGISTER_BACKGROUND_CONTROL[layerIndex] = FLAG_BACKGROUND_CHAR_BLOCK(0)                  |
+        REGISTER_BACKGROUND_CONTROL[layerIndex] |= FLAG_BACKGROUND_CHAR_BLOCK(0)                  |
                                                   FLAG_BACKGROUND_SCREEN_BLOCK(screenBlockIndex) |
                                                   FLAG_BACKGROUND_8BPP                           |
                                                   map.sizeFlag                                   |
@@ -21,5 +21,5 @@ void setMapOnScreen(Map map) {
         usedBackgrounds |= FLAG_BACKGROUND(layerIndex);
     }
 
-    REGISTER_DISPLAY_CONTROL = FLAG_MODE0 | usedBackgrounds;
+    REGISTER_DISPLAY_CONTROL |= FLAG_MODE0 | usedBackgrounds;
 }

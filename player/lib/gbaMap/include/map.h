@@ -31,6 +31,7 @@ typedef struct {
 
 Map loadMapFromROM(const unsigned short *mapData);
 
+void initMapRegisters();
 void setMapOnScreen(Map map);
 void shiftMap(Map map, BackgroundPoint offset);
 void shiftMapLayer(unsigned short layer, BackgroundPoint offset);

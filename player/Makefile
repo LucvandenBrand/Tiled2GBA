@@ -62,7 +62,7 @@ $(APP_OBJECTS) : %.o : %.c
 $(APP_MAIN_OBJECT) : $(APP_MAIN_SOURCE)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(NAME).gbfs : $(AUDIO_DATA)
+$(NAME).gbfs : $(MAP_DATA)
 	gbfs $@ $^
 
 clean :

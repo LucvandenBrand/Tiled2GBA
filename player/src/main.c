@@ -1,8 +1,10 @@
 #include "main.h"
 #include "./input/input.h"
+#include "tonc.h"
 
 int main()
 {
+    initMapRegisters();
     Map map = loadMap();
     setMapOnScreen(map);
 
